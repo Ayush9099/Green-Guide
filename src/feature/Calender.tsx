@@ -1,158 +1,292 @@
-'use client';
-import Header from '../Layout/Header';
-import { useState } from 'react';
-import { Search } from 'lucide-react';
+"use client";
 
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+import { useState, useEffect } from "react";
+import Header from "../Layout/Header";
+import { Search, X } from "lucide-react";
+import axiosInstance from "../axios";
+
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 interface PlantSchedule {
-    startInside: number[];
-    transplant: number[];
-    sowOutside: number[];
-    beginHarvest: number[];
+  startInside: number[];
+  transplant: number[];
+  sowOutside: number[];
+  beginHarvest: number[];
 }
 
 interface Plant {
-    name: string;
-    imageUrl: string;
-    schedule: PlantSchedule;
+  _id: string;
+  generalInfo: {
+    plantName: string;
+    img: string;
+  };
+  plantingTimes: {
+    springStartIndoors: string;
+    springTransplant: string;
+    springSowOutdoors: string;
+    fallStartIndoors: string;
+    fallTransplant: string;
+    fallSowOutdoors: string;
+  };
 }
 
-const plantData: Plant[] = [
-    {
-        name: 'Chives',
-        imageUrl: '/1.jpg',
-        schedule: {
-            startInside: [8, 9],
-            transplant: [9, 10],
-            sowOutside: [10],
-            beginHarvest: [],
-        },
-    },
-    {
-        name: 'Garlic',
-        imageUrl: '/2.jpg',
-        schedule: {
-            startInside: [],
-            transplant: [],
-            sowOutside: [3],
-            beginHarvest: [],
-        },
-    },
-    {
-        name: 'Leeks',
-        imageUrl: '/3.jpg',
-        schedule: {
-            startInside: [8],
-            transplant: [9, 10],
-            sowOutside: [],
-            beginHarvest: [],
-        },
-    },
-    {
-        name: 'Onions',
-        imageUrl: '/4.jpg',
-        schedule: {
-            startInside: [8],
-            transplant: [9],
-            sowOutside: [],
-            beginHarvest: [],
-        },
-    },
-    {
-        name: 'Red Onions',
-        imageUrl: '/5.jpg',
-        schedule: {
-            startInside: [8, 9],
-            transplant: [10, 11],
-            sowOutside: [],
-            beginHarvest: [],
-        },
-    },
-];
-
 export default function PlantCalendar() {
-    const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [plants, setPlants] = useState<Plant[]>([]);
+  const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
 
-    const filteredPlants = plantData.filter((plant) =>
-        plant.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const buttonColors = {
-        startInside: 'bg-pink-500 text-white',
-        transplant: 'bg-orange-500 text-white',
-        sowOutside: 'bg-purple-500 text-white',
-        beginHarvest: 'bg-teal-500 text-white',
+  useEffect(() => {
+    const fetchPlants = async () => {
+      try {
+        const response = await axiosInstance.get("/api/plants/list");
+        setPlants(response.data);
+      } catch (error) {
+        console.error("Error fetching plants:", error);
+      }
     };
 
-    return (
-        <>
-            <Header />
-            <div className="min-h-screen flex items-center justify-center bg-gray-100 ">
-                <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 mt-8">
-                <h2 className="text-4xl font-bold text-center mb-8 text-green-700">Plant Calendar</h2>
+    fetchPlants();
+  }, []);
 
-                    <div className="flex items-center mb-4">
-                        <div className="relative flex-grow">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                            <input
-                                type="text"
-                                placeholder="Search plant name..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring focus:ring-blue-300"
-                            />
-                        </div>
-                    </div>
-                    {filteredPlants.length > 0 ? (
-                        filteredPlants.map((plant) => (
-                            <div key={plant.name} className="flex items-center bg-gray-100 rounded-lg shadow-md p-4 mb-4 transition-transform hover:bg-gray-200">
-                                <img src={plant.imageUrl} alt={plant.name} className="w-16 h-16 mr-4 rounded-full shadow" />
-                                <div className="flex-grow">
-                                    <h3 className="text-lg font-semibold mb-1">{plant.name}</h3>
-                                    <div className="flex">
-                                        {months.map((month, index) => (
-                                            <div key={month} className="flex-grow text-center relative">
-                                                <span className="text-xs">{month}</span>
-                                                <div className="h-8 border-r border-gray-300 relative">
-                                                    {plant.schedule.startInside.includes(index + 1) && (
-                                                        <div className="absolute inset-0 bg-pink-500 opacity-50"></div>
-                                                    )}
-                                                    {plant.schedule.transplant.includes(index + 1) && (
-                                                        <div className="absolute inset-0 bg-orange-500 opacity-50"></div>
-                                                    )}
-                                                    {plant.schedule.sowOutside.includes(index + 1) && (
-                                                        <div className="absolute inset-0 bg-purple-500 opacity-50"></div>
-                                                    )}
-                                                    {plant.schedule.beginHarvest.includes(index + 1) && (
-                                                        <div className="absolute inset-0 bg-teal-500 opacity-50"></div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-gray-600 text-center">No plants found.</p>
-                    )}
-                    <div className="flex justify-around mt-4 rounded-full p-2">
-                        <button className={`${buttonColors.startInside} px-4 py-2 rounded-full`}>
-                            Start Inside
-                        </button>
-                        <button className={`${buttonColors.transplant} px-4 py-2 rounded-full`}>
-                            Transplant
-                        </button>
-                        <button className={`${buttonColors.sowOutside} px-4 py-2 rounded-full`}>
-                            Sow Outside
-                        </button>
-                        <button className={`${buttonColors.beginHarvest} px-4 py-2 rounded-full`}>
-                            Begin Harvest
-                        </button>
-                    </div>
-                </div>
+  const getSchedule = (plant: Plant): PlantSchedule => {
+    const schedule: PlantSchedule = {
+      startInside: [],
+      transplant: [],
+      sowOutside: [],
+      beginHarvest: [],
+    };
+
+    const addToSchedule = (dateString: string, type: keyof PlantSchedule) => {
+      const date = new Date(dateString);
+      const month = date.getMonth();
+      if (!schedule[type].includes(month + 1)) {
+        schedule[type].push(month + 1);
+      }
+    };
+
+    addToSchedule(plant.plantingTimes.springStartIndoors, "startInside");
+    addToSchedule(plant.plantingTimes.fallStartIndoors, "startInside");
+    addToSchedule(plant.plantingTimes.springTransplant, "transplant");
+    addToSchedule(plant.plantingTimes.fallTransplant, "transplant");
+    addToSchedule(plant.plantingTimes.springSowOutdoors, "sowOutside");
+    addToSchedule(plant.plantingTimes.fallSowOutdoors, "sowOutside");
+
+    return schedule;
+  };
+
+  const filteredPlants = plants.filter((plant) =>
+    plant.generalInfo.plantName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const buttonColors = {
+    startInside: "bg-pink-500 text-white",
+    transplant: "bg-orange-500 text-white",
+    sowOutside: "bg-purple-500 text-white",
+    beginHarvest: "bg-teal-500 text-white",
+  };
+
+  return (
+    <>
+      <Header />
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 mt-8">
+          <h2 className="text-4xl font-bold text-center mb-8 text-green-700">
+            Plant Calendar
+          </h2>
+
+          <div className="flex items-center mb-4">
+            <div className="relative flex-grow">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search plant name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring focus:ring-blue-300"
+              />
             </div>
-        </>
-    );
+          </div>
+          {filteredPlants.length > 0 ? (
+            filteredPlants.map((plant) => {
+              const schedule = getSchedule(plant);
+              return (
+                <div
+                  key={plant._id}
+                  className="flex items-center bg-gray-100 rounded-lg shadow-md p-4 mb-4 transition-transform hover:bg-gray-200 cursor-pointer"
+                  onClick={() => setSelectedPlant(plant)}
+                >
+                  <img
+                    src={plant.generalInfo.img}
+                    alt={plant.generalInfo.plantName}
+                    className="w-16 h-16 mr-4 rounded-full shadow"
+                  />
+                  <div className="flex-grow">
+                    <h3 className="text-lg font-semibold mb-1">
+                      {plant.generalInfo.plantName}
+                    </h3>
+                    <div className="flex">
+                      {months.map((month, index) => (
+                        <div
+                          key={month}
+                          className="flex-grow text-center relative"
+                        >
+                          <span className="text-xs">{month}</span>
+                          <div className="h-8 border-r border-gray-300 relative">
+                            {schedule.startInside.includes(index + 1) && (
+                              <div className="absolute inset-0 bg-pink-500 opacity-50"></div>
+                            )}
+                            {schedule.transplant.includes(index + 1) && (
+                              <div className="absolute inset-0 bg-orange-500 opacity-50"></div>
+                            )}
+                            {schedule.sowOutside.includes(index + 1) && (
+                              <div className="absolute inset-0 bg-purple-500 opacity-50"></div>
+                            )}
+                            {schedule.beginHarvest.includes(index + 1) && (
+                              <div className="absolute inset-0 bg-teal-500 opacity-50"></div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <p className="text-gray-600 text-center">No plants found.</p>
+          )}
+          <div className="flex justify-around mt-4 rounded-full p-2">
+            <button
+              className={`${buttonColors.startInside} px-4 py-2 rounded-full`}
+            >
+              Start Inside
+            </button>
+            <button
+              className={`${buttonColors.transplant} px-4 py-2 rounded-full`}
+            >
+              Transplant
+            </button>
+            <button
+              className={`${buttonColors.sowOutside} px-4 py-2 rounded-full`}
+            >
+              Sow Outside
+            </button>
+            <button
+              className={`${buttonColors.beginHarvest} px-4 py-2 rounded-full`}
+            >
+              Begin Harvest
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {selectedPlant && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 max-w-lg w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">
+                {selectedPlant.generalInfo.plantName} Planting Schedule
+              </h3>
+              <button
+                onClick={() => setSelectedPlant(null)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Calendar Grid Layout */}
+            <div className="grid grid-cols-4 gap-2">
+              {months.map((month, index) => {
+                const isSpringStartIndoors = [
+                  new Date(
+                    selectedPlant.plantingTimes.springStartIndoors
+                  ).getMonth(),
+                ].includes(index);
+                const isSpringTransplant = [
+                  new Date(
+                    selectedPlant.plantingTimes.springTransplant
+                  ).getMonth(),
+                ].includes(index);
+                const isSpringSowOutdoors = [
+                  new Date(
+                    selectedPlant.plantingTimes.springSowOutdoors
+                  ).getMonth(),
+                ].includes(index);
+                const isFallStartIndoors = [
+                  new Date(
+                    selectedPlant.plantingTimes.fallStartIndoors
+                  ).getMonth(),
+                ].includes(index);
+                const isFallTransplant = [
+                  new Date(
+                    selectedPlant.plantingTimes.fallTransplant
+                  ).getMonth(),
+                ].includes(index);
+                const isFallSowOutdoors = [
+                  new Date(
+                    selectedPlant.plantingTimes.fallSowOutdoors
+                  ).getMonth(),
+                ].includes(index);
+
+                return (
+                  <div
+                    key={month}
+                    className="p-2 rounded-lg shadow-md border relative text-center"
+                  >
+                    <span className="text-sm font-semibold">{month}</span>
+                    <div className="mt-2 space-y-1">
+                      {isSpringStartIndoors && (
+                        <p className="text-xs bg-pink-100 text-pink-600 rounded px-2">
+                          Spring Start Indoors
+                        </p>
+                      )}
+                      {isSpringTransplant && (
+                        <p className="text-xs bg-orange-100 text-orange-600 rounded px-2">
+                          Spring Transplant
+                        </p>
+                      )}
+                      {isSpringSowOutdoors && (
+                        <p className="text-xs bg-purple-100 text-purple-600 rounded px-2">
+                          Spring Sow Outdoors
+                        </p>
+                      )}
+                      {isFallStartIndoors && (
+                        <p className="text-xs bg-teal-100 text-teal-600 rounded px-2">
+                          Fall Start Indoors
+                        </p>
+                      )}
+                      {isFallTransplant && (
+                        <p className="text-xs bg-yellow-100 text-yellow-600 rounded px-2">
+                          Fall Transplant
+                        </p>
+                      )}
+                      {isFallSowOutdoors && (
+                        <p className="text-xs bg-green-100 text-green-600 rounded px-2">
+                          Fall Sow Outdoors
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
