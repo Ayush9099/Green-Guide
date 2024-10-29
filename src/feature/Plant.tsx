@@ -226,7 +226,7 @@ export default function Component() {
       const formDataToSend = new FormData();
 
       // Append general info
-      Object.entries(formData.generalInfo).forEach(([key, value]) => {
+     Object.entries(formData.generalInfo).forEach(([key, value]) => {
         if (key === "icon" || key === "img") {
           if (value && typeof value !== 'string') {
             formDataToSend.append(key, value as Blob, (value as File).name);
