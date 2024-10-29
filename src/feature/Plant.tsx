@@ -1,9 +1,11 @@
+
+
 "use client";
 
 import React, { useState, useEffect } from "react";
 import Header from "../Layout/Header";
 import axiosInstance from "../axios";
-import {Link , useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 type FormDataSection =
   | "generalInfo"
@@ -65,7 +67,6 @@ interface FormData {
 
 export default function Component() {
   const [showAddPlant, setShowAddPlant] = useState(false);
-  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     generalInfo: {
       plantName: "",
@@ -206,10 +207,7 @@ export default function Component() {
     }));
   };
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: "icon" | "img"
-  ) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: "icon" | "img") => {
     const file = e.target.files?.[0];
     if (file) {
       setFormData((prev) => ({
@@ -238,13 +236,11 @@ export default function Component() {
         }
       });
 
+
       Object.entries(formData.quickInfo).forEach(([key, value]) => {
-        if (typeof value === "object") {
+        if (typeof value === 'object') {
           Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-            formDataToSend.append(
-              `quickInfo[${key}][${nestedKey}]`,
-              nestedValue.toString()
-            );
+            formDataToSend.append(`quickInfo[${key}][${nestedKey}]`, nestedValue.toString());
           });
         } else {
           formDataToSend.append(`quickInfo[${key}]`, value.toString());
@@ -261,54 +257,17 @@ export default function Component() {
 
       const response = await axiosInstance.post("/api/plants", formDataToSend, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
       setPlantsData((prev) => [...prev, response.data]);
       setShowAddPlant(false);
       setFormData({
-        generalInfo: {
-          plantName: "",
-          taxonomicName: "",
-          description: "",
-          category: "",
-          icon: "",
-          img: "",
-        },
-        quickInfo: {
-          slideBarOption: "16/square",
-          plantingDepth: "",
-          waterPerWeek: "",
-          sunRequirement: "",
-          growingSeason: "",
-          frostTolerance: "",
-          germinationTime: { duration: 0, unit: "days" },
-          maxHeight: { height: 0, unit: "in" },
-          maturityTime: { duration: 0, unit: "days" },
-          soilPH: "",
-          transplantingNotes: "",
-          springFrost: "",
-          fallFrost: "",
-        },
-        plantingTimes: {
-          springStartIndoors: "",
-          springTransplant: "",
-          springSowOutdoors: "",
-          fallStartIndoors: "",
-          fallTransplant: "",
-          fallSowOutdoors: "",
-        },
-        detailedInfo: {
-          growingFromSeed: "",
-          plantingConsiderations: "",
-          feeding: "",
-          harvesting: "",
-          storage: "",
-          pruning: "",
-          herbal: "",
-        },
+        generalInfo: { plantName: "", taxonomicName: "", description: "", category: "", icon: "", img: "" },
+        quickInfo: { slideBarOption: "16/square", plantingDepth: "", waterPerWeek: "", sunRequirement: "", growingSeason: "", frostTolerance: "", germinationTime: { duration: 0, unit: "days" }, maxHeight: { height: 0, unit: "in" }, maturityTime: { duration: 0, unit: "days" }, soilPH: "", transplantingNotes: "", springFrost: "", fallFrost: "" },
+        plantingTimes: { springStartIndoors: "", springTransplant: "", springSowOutdoors: "", fallStartIndoors: "", fallTransplant: "", fallSowOutdoors: "" },
+        detailedInfo: { growingFromSeed: "", plantingConsiderations: "", feeding: "", harvesting: "", storage: "", pruning: "", herbal: "" },
       });
-      navigate("/plant");
     } catch (error) {
       console.error("Error adding plant:", error);
     }
@@ -585,83 +544,43 @@ export default function Component() {
               placeholder="Transplanting Notes"
               className="border mb-2 w-full p-2"
             />
-            <input
-              name="springFrost"
-              value={formData.quickInfo.springFrost}
-              onChange={(e) => handleChange(e, "quickInfo", "springFrost")}
-              type="date"
-              placeholder="Spring Frost Date"
-              className="border mb-2 w-full p-2"
-            />
-            <input
-              name="fallFrost"
-              value={formData.quickInfo.fallFrost}
-              onChange={(e) => handleChange(e, "quickInfo", "fallFrost")}
-              type="date"
-              placeholder="Fall Frost Date"
-              className="border mb-2 w-full p-2"
-            />
-            <h2 className="text-xl font-semibold mb-2">Planting Times</h2>
-            <input
-              name="springStartIndoors"
-              value={formData.plantingTimes.springStartIndoors}
-              onChange={(e) =>
-                handleChange(e, "plantingTimes", "springStartIndoors")
-              }
-              type="date"
-              placeholder="Spring Start Indoors"
-              className="border mb-2 w-full p-2"
-            />
-            <input
-              name="springTransplant"
-              value={formData.plantingTimes.springTransplant}
-              onChange={(e) =>
-                handleChange(e, "plantingTimes", "springTransplant")
-              }
-              type="date"
-              placeholder="Spring Transplant"
-              className="border mb-2 w-full p-2"
-            />
-            <input
-              name="springSowOutdoors"
-              value={formData.plantingTimes.springSowOutdoors}
-              onChange={(e) =>
-                handleChange(e, "plantingTimes", "springSowOutdoors")
-              }
-              type="date"
-              placeholder="Spring Sow Outdoors"
-              className="border mb-2 w-full p-2"
-            />
-            <input
-              name="fallStartIndoors"
-              value={formData.plantingTimes.fallStartIndoors}
-              onChange={(e) =>
-                handleChange(e, "plantingTimes", "fallStartIndoors")
-              }
-              type="date"
-              placeholder="Fall Start Indoors"
-              className="border mb-2 w-full p-2"
-            />
-            <input
-              name="fallTransplant"
-              value={formData.plantingTimes.fallTransplant}
-              onChange={(e) =>
-                handleChange(e, "plantingTimes", "fallTransplant")
-              }
-              type="date"
-              placeholder="Fall Transplant"
-              className="border mb-2 w-full p-2"
-            />
-            <input
-              name="fallSowOutdoors"
-              value={formData.plantingTimes.fallSowOutdoors}
-              onChange={(e) =>
-                handleChange(e, "plantingTimes", "fallSowOutdoors")
-              }
-              type="date"
-              placeholder="Fall Sow Outdoors"
-              className="border mb-2 w-full p-2"
-            />
+              
+              <h2 className="text-xl font-semibold mb-2">Planting Times</h2>
+{Object.entries({
+  springFrost: formData.quickInfo.springFrost,
+  fallFrost: formData.quickInfo.fallFrost,
+  springStartIndoors: formData.plantingTimes.springStartIndoors,
+  springTransplant: formData.plantingTimes.springTransplant,
+  springSowOutdoors: formData.plantingTimes.springSowOutdoors,
+  fallStartIndoors: formData.plantingTimes.fallStartIndoors,
+  fallTransplant: formData.plantingTimes.fallTransplant,
+  fallSowOutdoors: formData.plantingTimes.fallSowOutdoors,
+}).map(([key, value]) => {
+  const titleMap: { [key: string]: string } = {
+    springFrost: "Spring Frost Date",
+    fallFrost: "Fall Frost Date",
+    springStartIndoors: "Spring Start Indoors",
+    springTransplant: "Spring Transplant",
+    springSowOutdoors: "Spring Sow Outdoors",
+    fallStartIndoors: "Fall Start Indoors",
+    fallTransplant: "Fall Transplant",
+    fallSowOutdoors: "Fall Sow Outdoors",
+  };
+
+  return (
+    <div key={key} className="mb-2">
+      <label className="block mb-1">{titleMap[key]}</label>
+      <input
+        type="date"
+        name={key}
+        value={value}
+        onChange={(e) => handleChange(e, key.includes('Frost') ? "quickInfo" : "plantingTimes", key)}
+        className="border w-full p-2"
+      />
+    </div>
+  );
+})}
+
             <h2 className="text-xl font-semibold mb-2">Detailed Info</h2>
             <textarea
               name="growingFromSeed"
@@ -726,31 +645,19 @@ export default function Component() {
         )}
 
         <h2 className="text-2xl font-semibold mb-4">Existing Plants</h2>
+
+
         {plantsData.length > 0 ? (
           plantsData.map((plant) => (
-            <div
-              key={plant._id}
-              className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md hover:shadow-lg transition-shadow duration-200"
-            >
+            <div key={plant._id} className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md hover:shadow-lg transition-shadow duration-200">
               <h3 className="text-xl font-semibold mb-2">
-                <Link
-                  to={`/plants/${plant._id}`}
-                  className="text-green-600 hover:underline"
-                >
-                  {plant.generalInfo.plantName}
-                </Link>
+                <Link to={`/plants/${plant._id}`} className="text-green-600 hover:underline">{plant.generalInfo.plantName}</Link>
               </h3>
-              <p className="text-gray-700 mb-2">
-                {plant.generalInfo.description}
-              </p>
+              <p className="text-gray-700 mb-2">{plant.generalInfo.description}</p>
               {plant.generalInfo.img && (
                 <div className="flex justify-center mb-4">
                   <Link to={`/plants/${plant._id}`}>
-                    <img
-                      src={plant.generalInfo.img}
-                      alt={plant.generalInfo.plantName}
-                      className="w-full h-auto rounded-md cursor-pointer"
-                    />
+                    <img src={plant.generalInfo.img} alt={plant.generalInfo.plantName} className="w-full h-auto rounded-md cursor-pointer" />
                   </Link>
                 </div>
               )}
@@ -759,7 +666,9 @@ export default function Component() {
         ) : (
           <p className="text-center text-gray-600">No plants found.</p>
         )}
+
+
       </div>
     </>
-  );
+  );  
 }
