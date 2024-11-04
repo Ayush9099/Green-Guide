@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Header from "../Layout/Header";
 import { Search, X } from "lucide-react";
 import axiosInstance from "../axios";
+import Footer from "../Layout/Footer";
 
 const months = [
   "Jan",
@@ -287,6 +288,7 @@ export default function PlantCalendar() {
           </div>
         </div>
       )}
+      <Footer/>
     </>
   );
 }

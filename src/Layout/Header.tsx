@@ -17,6 +17,7 @@ const Header: React.FC = () => {
     <header className="bg-white text-black p-4">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         <nav className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-1">
+          <a href="/" className="hover:text-green transition px-4 py-2">Home</a>
           <a href="/gardens" className="hover:text-green transition px-4 py-2">Gardens</a>
           <a href="/plant" className="hover:text-green transition px-4 py-2">Plant</a>
           <a href="/calender" className="hover:text-green transition px-4 py-2">Calender</a>
@@ -27,7 +28,7 @@ const Header: React.FC = () => {
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className="bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-700 transition"
+              className="bg-gray-800 text-white py-2 px-4 rounded-xl hover:bg-gray-700 transition"
             >
               Logout
             </button>
@@ -41,7 +42,7 @@ const Header: React.FC = () => {
               </a>
               <a
                 href="/register"
-                className="bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-700 transition"
+                className="bg-gray-800 text-white py-2 px-4 rounded-xl hover:bg-gray-700 transition"
               >
                 Register
               </a>

@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../Layout/Header";
 import axiosInstance from "../axios";
+import Footer from "../Layout/Footer";
 
 interface Plant {
   _id: string;
@@ -123,7 +125,7 @@ const Garden: React.FC = () => {
   const handleDeleteGarden = async (index: number, gardenId: string) => {
     if (window.confirm("Are you sure you want to delete this garden?")) {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         await axiosInstance.delete(`/api/garden/${gardenId}`, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -143,9 +145,9 @@ const Garden: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="max-w-4xl mx-auto p-6 bg-gray-50">
+      <main className="flex-grow max-w-4xl mx-auto p-6 bg-gray-50">
         <h1 className="text-4xl font-bold text-center mb-8 text-green-700">
           Your Gardens
         </h1>
@@ -282,8 +284,9 @@ const Garden: React.FC = () => {
             </div>
           </div>
         )}
-      </div>
-    </>
+      </main>
+      <Footer />
+    </div>
   );
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../Layout/Header';
+import Footer from '../Layout/Footer';
 
 const About: React.FC = () => {
     return (
@@ -33,6 +34,7 @@ const About: React.FC = () => {
                     Join us in nurturing your green thumb! Download Green Guide today and start creating your dream garden. Together, we can cultivate a world where every space is lush, vibrant, and full of life.
                 </p>
             </div>
+            <Footer/>
         </>
     );
 };

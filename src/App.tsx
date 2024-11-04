@@ -12,12 +12,14 @@ import About from "./feature/About";
 import Calender from "./feature/Calender";
 import PlantDetailed from "./feature/plantDetail";
 import GardenDetail from "./feature/garden-detail"
+import Home from "./feature/Home";
+
 const App = () => {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Garden />} />
+          <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/signin" element={<Login />} />
           <Route path="/gardens" element={<Garden />} />
