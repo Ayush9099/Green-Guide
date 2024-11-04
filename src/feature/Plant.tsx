@@ -180,7 +180,7 @@ export default function PlantManagement() {
     const fetchPlantsData = async () => {
       try {
         const response = await axiosInstance.get("/api/plants/list");
-        setPlantsData(response.data.data);
+        setPlantsData(response.data);
       } catch (error) {
         console.error("Error fetching plants data:", error);
       }
