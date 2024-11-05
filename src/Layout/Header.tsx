@@ -19,7 +19,7 @@ const Header: React.FC = () => {
             <FaHome className="mr-2" /> Home
           </a>
           <a href="/gardens" className="flex items-center hover:text-green transition px-4 py-2">
-            <FaLeaf className="mr-2" /> Gardens {/* Replaced FaTree with FaLeaf */}
+            <FaLeaf className="mr-2" /> Gardens 
           </a>
           <a href="/plant" className="flex items-center hover:text-green transition px-4 py-2">
             <FaSeedling className="mr-2" /> Plant
@@ -33,7 +33,6 @@ const Header: React.FC = () => {
           <a href="/about" className="flex items-center hover:text-green transition px-4 py-2">
             <FaInfoCircle className="mr-2" /> About
           </a>
-          {/* New Contact Us Link */}
           <a href="/contact" className="flex items-center hover:text-green transition px-4 py-2">
             <FaPhone className="mr-2" /> Contact Us
           </a>

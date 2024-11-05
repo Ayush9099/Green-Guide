@@ -265,11 +265,10 @@ export default function PlantManagement() {
           ...prev.generalInfo,
           plantName: selectedPlant.common_name || "",
           taxonomicName: selectedPlant.scientific_name || "",
-          description: `${
-            selectedPlant.family_common_name
-              ? `Family: ${selectedPlant.family_common_name}. `
-              : ""
-          }${selectedPlant.bibliography}`,
+          description: `${selectedPlant.family_common_name
+            ? `Family: ${selectedPlant.family_common_name}. `
+            : ""
+            }${selectedPlant.bibliography}`,
           img: selectedPlant.image_url || "",
         },
         quickInfo: {
@@ -377,15 +376,17 @@ export default function PlantManagement() {
     <>
       <Header />
       <div className="max-w-4xl mx-auto p-4">
-        <h1 className="text-4xl font-bold text-center mb-8 text-green-700">
+        <h1 className="text-4xl font-serif font-semibold text-green-500 text-center mb-10">
           Plant Management System
         </h1>
+
         <button
           onClick={() => setShowAddPlant(!showAddPlant)}
-          className="mb-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          className="mb-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition duration-200"
         >
           {showAddPlant ? "Cancel" : "Add Plant"}
         </button>
+
 
         {showAddPlant && (
           <form
@@ -746,42 +747,62 @@ export default function PlantManagement() {
           </form>
         )}
 
-        <h2 className="text-2xl font-semibold mb-4">Plants</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+     
+        <h2 className="text-3xl font-serif font-semibold text-gray-800 mb-8">Plants</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {plantsData && plantsData.length > 0 ? (
             plantsData.map((plant) => (
               <div
                 key={plant._id}
-                className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md hover:shadow-lg transition-shadow duration-200"
+                className="bg-white border border-gray-300 rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 relative overflow-hidden"
               >
-                <h3 className="text-xl font-semibold mb-2">
+                <div className="relative">
+                  <Link to={`/plants/${plant._id}`} className="block">
+                    <img
+                      src={plant.generalInfo.img}
+                      alt={plant.generalInfo?.plantName || "Plant image"}
+                      className="w-full h-48 object-cover rounded-md transition-transform duration-200 transform hover:scale-105"
+                    />
+                  </Link>
+                </div>
+
+                <h3 className="text-2xl font-serif font-semibold mt-4 text-gray-800">
                   <Link
                     to={`/plants/${plant._id}`}
-                    className="text-green-600 hover:underline"
+                    className="text-gray-800 hover:underline transition duration-200"
                   >
                     {plant.generalInfo?.plantName || "Unnamed Plant"}
                   </Link>
                 </h3>
-                <p className="text-gray-700 mb-2">
+
+                <p className="text-gray-600 text-sm mt-2 mb-4 line-clamp-2">
                   {plant.generalInfo?.description || "No description available"}
                 </p>
-                {plant.generalInfo?.img && (
-                  <div className="flex justify-center mb-4">
-                    <Link to={`/plants/${plant._id}`}>
-                      <img
-                        src={plant.generalInfo.img}
-                        alt={plant.generalInfo?.plantName || "Plant image"}
-                        className="w-full h-auto rounded-md cursor-pointer"
-                      />
-                    </Link>
-                  </div>
-                )}
+                <div className="mt-6 text-center">
+                  <Link
+                    to={`/plants/${plant._id}`}
+                    className="bg-gray-800 text-white py-3 px-6 rounded-full text-md font-semibold shadow-md hover:bg-gray-700 transition duration-200"
+                  >
+                    View Details
+                  </Link>
+                </div>
               </div>
             ))
           ) : (
-            <p className="text-center text-gray-600">No plants found.</p>
+            <div className="text-center text-gray-600 col-span-3 flex flex-col justify-center items-center">
+              <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-gray-500 mb-6"></div>
+              <p className="text-xl mb-4">No plants found. Start growing!</p>
+              <button
+                onClick={() => {/* Handle action like redirect or reload */ }}
+                className="mt-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-md hover:bg-gray-700 transition duration-200"
+              >
+                + Add Your First Plant
+              </button>
+            </div>
           )}
         </div>
+
       </div>
     </>
   );

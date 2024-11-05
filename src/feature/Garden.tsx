@@ -129,9 +129,9 @@ const Garden: React.FC = () => {
     navigate(`/garden/${gardenId}`);
   };
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 ">
       <Header />
-      <main className="flex-grow max-w-4xl mx-auto p-6 bg-white">
+      <main className="flex-grow max-w-4xl mx-auto p-6 bg-white w-[35%]">
         <h1 className="text-4xl font-semibold text-center mb-8 text-green-700">
           My Gardens
         </h1>
@@ -148,7 +148,7 @@ const Garden: React.FC = () => {
             </button>
           </div>
         ) : (
-          <div>
+          <div className="" >
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Your Gardens</h2>
             <ul className="space-y-4">
               {gardens.map((garden, index) => (
