@@ -13,6 +13,7 @@ import Calender from "./feature/Calender";
 import PlantDetailed from "./feature/plantDetail";
 import GardenDetail from "./feature/garden-detail"
 import Home from "./feature/Home";
+import Contact from "./feature/contactUs";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
           <Route path="/blog" element={<Blog />} />
           <Route path="/about" element={<About />} />
           <Route path="/calender" element={<Calender />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

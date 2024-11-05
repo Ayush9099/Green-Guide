@@ -746,7 +746,7 @@ export default function PlantManagement() {
           </form>
         )}
 
-        <h2 className="text-2xl font-semibold mb-4">Existing Plants</h2>
+        <h2 className="text-2xl font-semibold mb-4">Plants</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {plantsData && plantsData.length > 0 ? (
             plantsData.map((plant) => (
@@ -780,68 +780,6 @@ export default function PlantManagement() {
             ))
           ) : (
             <p className="text-center text-gray-600">No plants found.</p>
-          )}
-        </div>
-
-        <h2 className="text-2xl font-semibold mb-4 mt-8">Trefle.io Plants</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {trefleData.length > 0 ? (
-            trefleData.map((plant) => (
-              <div
-                key={plant.id}
-                className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md hover:shadow-lg transition-shadow duration-200"
-              >
-                <h3 className="text-xl font-semibold mb-2">
-                  {plant.common_name || plant.scientific_name}
-                </h3>
-                <p className="text-gray-700 mb-2">
-                  Scientific Name: {plant.scientific_name}
-                </p>
-                <p className="text-gray-700 mb-2">Family: {plant.family}</p>
-                <p className="text-gray-700 mb-2">Genus: {plant.genus}</p>
-                <p className="text-gray-700 mb-2">Year: {plant.year}</p>
-                <p className="text-gray-700 mb-2">Author: {plant.author}</p>
-                <p className="text-gray-700 mb-2">
-                  Bibliography: {plant.bibliography}
-                </p>
-                <p className="text-gray-700 mb-2">Status: {plant.status}</p>
-                <p className="text-gray-700 mb-2">Rank: {plant.rank}</p>
-                {plant.family_common_name && (
-                  <p className="text-gray-700 mb-2">
-                    Family Common Name: {plant.family_common_name}
-                  </p>
-                )}
-                {plant.synonyms && plant.synonyms.length > 0 && (
-                  <div>
-                    {" "}
-                    <h4 className="font-semibold mt-2 mb-1">Synonyms:</h4>{" "}
-                    <ul className="list-disc list-inside">
-                      {" "}
-                      {plant.synonyms.map((synonym, index) => (
-                        <li key={index} className="text-sm text-gray-600">
-                          {synonym}
-                        </li>
-                      ))}{" "}
-                    </ul>{" "}
-                  </div>
-                )}
-                {plant.image_url && (
-                  <div className="flex justify-center mb-4">
-                    <div className="w-48 h-48 relative overflow-hidden rounded-md">
-                      <img
-                        src={plant.image_url}
-                        alt={plant.common_name || plant.scientific_name}
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-600">
-              No Trefle.io plants found.
-            </p>
           )}
         </div>
       </div>

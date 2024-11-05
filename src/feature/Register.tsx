@@ -13,7 +13,6 @@ const Register: React.FC = () => {
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
-        
         try {
             const response = await axiosInstance.post('/auth/register', {
                 name: username,
