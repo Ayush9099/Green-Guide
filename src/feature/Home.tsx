@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 import axiosInstance from "../axios";
+import { toast } from "react-toastify"; // Import toaster
 
 interface Plant {
   _id: string;
@@ -52,7 +53,7 @@ const Home: React.FC = () => {
     if (reviewText) {
       try {
         const token = localStorage.getItem("token");
-        const response = await axiosInstance.post(
+        await axiosInstance.post(
           "/api/reviews",
           { review: reviewText },
           {
@@ -61,10 +62,12 @@ const Home: React.FC = () => {
             },
           }
         );
-        setReviews((prev) => [...prev, response.data.review]);
-        setReviewText("");
+        toast.success("Review submitted successfully!");
+        setReviewText(""); // Clear input field
+        fetchReviews(); // Re-fetch reviews
       } catch (error) {
         console.error("Error submitting review:", error);
+        toast.error("Failed to submit review.");
       }
     }
   };
@@ -234,34 +237,40 @@ const Home: React.FC = () => {
               Check out these exclusive features to enhance your plant care
               journey and join our growing community of plant enthusiasts.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-              <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                  Plant Care Calendar
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              <Link
+                to="/care-guide"
+                className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300"
+              >
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  Plant Care Guide
                 </h3>
                 <p className="text-gray-600">
-                  Stay on top of seasonal tasks and plant care reminders so your
-                  plants thrive all year round.
+                  Access personalized plant care tips and expert advice.
                 </p>
-              </div>
-              <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                  Plant Database
+              </Link>
+              <Link
+                to="/calendar"
+                className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300"
+              >
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  Seasonal Calendar
                 </h3>
                 <p className="text-gray-600">
-                  Access detailed care guides and resources for your favorite
-                  plants to keep them healthy and beautiful.
+                  Stay on top of seasonal care with our tailored plant calendar.
                 </p>
-              </div>
-              <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              </Link>
+              <Link
+                to="/community"
+                className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300"
+              >
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
                   Community Forum
                 </h3>
                 <p className="text-gray-600">
-                  Engage with plant enthusiasts, share your experiences, and get
-                  advice from experts in the field.
+                  Connect with other plant lovers and share your experiences.
                 </p>
-              </div>
+              </Link>
             </div>
           </div>
         </section>
