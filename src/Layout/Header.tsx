@@ -13,14 +13,12 @@ const Header: React.FC = () => {
     setIsLoggedIn(!!token);
     setIsAdmin(userRole === 'admin'); // Check if the user is an admin
   }, []);
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role'); // Clear the role as well
     setIsLoggedIn(false);
     setIsAdmin(false);
   };
-
   return (
     <header className="bg-gradient-to-r from-teal-100 via-white to-teal-100 text-gray-800 shadow-md py-4 px-6">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
@@ -122,5 +120,4 @@ const Header: React.FC = () => {
     </header>
   );
 };
-
 export default Header;
