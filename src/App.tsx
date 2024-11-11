@@ -2,7 +2,6 @@ import Login from "./feature/Login"
 import Signup from "./feature/Signup"
 import NotFound from "./Pages/NotFound"
 import './index.css';
-// import Home from "./Layout/Home";
 import Register from "./feature/Register";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Plant from "./feature/Plant";
