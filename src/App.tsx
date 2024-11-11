@@ -13,7 +13,7 @@ import Calender from "./feature/Calender";
 import PlantDetailed from "./feature/plantDetail";
 import GardenDetail from "./feature/garden-detail"
 import Home from "./feature/Home";
-import ContactUs from "./feature/ContactUs";
+import ContactUs from "./feature/contactUs";
 import AdminLogin from "./feature/AdminLogin";
 import Dashboard from "./Admin/Dashboard";
 import AddPlant from "./Admin/AddPlant";
