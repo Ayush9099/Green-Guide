@@ -72,35 +72,35 @@ const PlantDetailed: React.FC = () => {
         fetchPlantData();
     }, [id]);
 
-    if (!plant) return <p className="text-center text-lg">Loading...</p>;
+    if (!plant) return <p className="text-center text-lg text-gray-600">Loading...</p>;
 
     return (
         <>
             <Header />
-            <div className="max-w-4xl mx-auto p-6 bg-gray-50 shadow-md rounded-lg">
-                <h1 className="text-4xl font-bold mb-4 text-green-600">{plant.generalInfo.plantName}</h1>
-                
+            <div className="max-w-5xl mx-auto p-6 bg-white  rounded-lg mb-8 mt-2">
+                <h1 className="text-4xl font-bold text-teal-600 mb-6 ">{plant.generalInfo.plantName}</h1>
+
                 {plant.generalInfo.img && (
-                    <div className="flex justify-center mb-4 rounded-lg border border-gray-300 shadow-md">
+                    <div className="flex justify-center mb-8 rounded-lg shadow-lg overflow-hidden">
                         <img
                             src={plant.generalInfo.img}
                             alt={plant.generalInfo.plantName}
-                            className="w-[45%] h-auto rounded-lg"
+                            className="w-[30%] h-auto rounded-lg transition-transform duration-300 transform hover:scale-110"
                         />
                     </div>
                 )}
 
-                <p className="mb-4 text-gray-700 text-center">{plant.generalInfo.description}</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div className="bg-white p-4 rounded-lg shadow">
-                        <h2 className="text-2xl font-semibold text-green-500">General Info</h2>
+                <p className="mb-6 text-lg text-gray-700 text-center">{plant.generalInfo.description}</p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div className="bg-white p-6 rounded-lg shadow-lg transition-transform duration-200 hover:scale-105">
+                        <h2 className="text-2xl font-semibold text-teal-500 mb-4">General Info</h2>
                         <p><strong>Taxonomic Name:</strong> {plant.generalInfo.taxonomicName}</p>
                         <p><strong>Category:</strong> {plant.generalInfo.category}</p>
                     </div>
 
-                    <div className="bg-white p-4 rounded-lg shadow">
-                        <h2 className="text-2xl font-semibold text-green-500">Quick Info</h2>
+                    <div className="bg-white p-6 rounded-lg shadow-lg transition-transform duration-200 hover:scale-105">
+                        <h2 className="text-2xl font-semibold text-teal-500 mb-4">Quick Info</h2>
                         <p><strong>Planting Depth:</strong> {plant.quickInfo.plantingDepth}</p>
                         <p><strong>Water Per Week:</strong> {plant.quickInfo.waterPerWeek}</p>
                         <p><strong>Sun Requirement:</strong> {plant.quickInfo.sunRequirement}</p>
@@ -111,10 +111,9 @@ const PlantDetailed: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Planting Times Section */}
-                <div className="bg-white p-4 rounded-lg shadow mb-6">
-                    <h2 className="text-2xl font-semibold text-green-500 mb-4">Planting Times</h2>
-                    <ul className="list-disc pl-5">
+                <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 className="text-2xl font-semibold text-teal-500 mb-4">Planting Times</h2>
+                    <ul className="list-disc pl-6 space-y-2 text-lg">
                         <li><strong>Spring Start Indoors:</strong> {plant.plantingTimes.springStartIndoors}</li>
                         <li><strong>Spring Transplant:</strong> {plant.plantingTimes.springTransplant}</li>
                         <li><strong>Fall Transplant:</strong> {plant.plantingTimes.fallTransplant}</li>
@@ -124,10 +123,9 @@ const PlantDetailed: React.FC = () => {
                     </ul>
                 </div>
 
-                {/* Detailed Info Section */}
-                <div className="bg-white p-4 rounded-lg shadow mb-6">
-                    <h2 className="text-2xl font-semibold text-green-500 mb-4">Detailed Info</h2>
-                    <ul className="list-disc pl-5">
+                <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 className="text-2xl font-semibold text-teal-500 mb-4">Detailed Info</h2>
+                    <ul className="list-disc pl-6 space-y-2 text-lg">
                         <li><strong>Growing From Seed:</strong> {plant.detailedInfo.growingFromSeed}</li>
                         <li><strong>Planting Considerations:</strong> {plant.detailedInfo.plantingConsiderations}</li>
                         <li><strong>Feeding:</strong> {plant.detailedInfo.feeding}</li>

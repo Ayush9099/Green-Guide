@@ -5,6 +5,7 @@ import Header from "../Layout/Header";
 import { Search, X } from "lucide-react";
 import axiosInstance from "../axios";
 import Footer from "../Layout/Footer";
+import { Plant , PlantSchedule } from "../types"
 
 const months = [
   "Jan",
@@ -20,29 +21,6 @@ const months = [
   "Nov",
   "Dec",
 ];
-
-interface PlantSchedule {
-  startInside: number[];
-  transplant: number[];
-  sowOutside: number[];
-  beginHarvest: number[];
-}
-
-interface Plant {
-  _id: string;
-  generalInfo: {
-    plantName: string;
-    img: string;
-  };
-  plantingTimes: {
-    springStartIndoors: string;
-    springTransplant: string;
-    springSowOutdoors: string;
-    fallStartIndoors: string;
-    fallTransplant: string;
-    fallSowOutdoors: string;
-  };
-}
 
 export default function PlantCalendar() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -93,22 +71,22 @@ export default function PlantCalendar() {
   );
 
   const buttonColors = {
-    startInside: "bg-pink-500 text-white",
-    transplant: "bg-orange-500 text-white",
-    sowOutside: "bg-purple-500 text-white",
-    beginHarvest: "bg-teal-500 text-white",
+    startInside: "bg-pink-600 text-white",
+    transplant: "bg-orange-600 text-white",
+    sowOutside: "bg-purple-600 text-white",
+    beginHarvest: "bg-teal-600 text-white",
   };
 
   return (
     <>
       <Header />
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 mt-8">
-          <h2 className="text-4xl font-bold text-center mb-8 text-green-700">
+          <h2 className="text-4xl font-bold text-center mb-8 text-teal-700">
             Plant Calendar
           </h2>
 
-          <div className="flex items-center mb-4">
+          <div className="flex items-center mb-6">
             <div className="relative flex-grow">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
@@ -120,6 +98,7 @@ export default function PlantCalendar() {
               />
             </div>
           </div>
+
           {filteredPlants.length > 0 ? (
             filteredPlants.map((plant) => {
               const schedule = getSchedule(plant);
@@ -132,10 +111,10 @@ export default function PlantCalendar() {
                   <img
                     src={plant.generalInfo.img}
                     alt={plant.generalInfo.plantName}
-                    className="w-16 h-16 mr-4 rounded-full shadow"
+                    className="w-16 h-16 mr-4 rounded-full shadow-md"
                   />
                   <div className="flex-grow">
-                    <h3 className="text-lg font-semibold mb-1">
+                    <h3 className="text-lg font-semibold mb-1 text-gray-800">
                       {plant.generalInfo.plantName}
                     </h3>
                     <div className="flex">
@@ -144,7 +123,7 @@ export default function PlantCalendar() {
                           key={month}
                           className="flex-grow text-center relative"
                         >
-                          <span className="text-xs">{month}</span>
+                          <span className="text-xs text-gray-600">{month}</span>
                           <div className="h-8 border-r border-gray-300 relative">
                             {schedule.startInside.includes(index + 1) && (
                               <div className="absolute inset-0 bg-pink-500 opacity-50"></div>
@@ -169,24 +148,25 @@ export default function PlantCalendar() {
           ) : (
             <p className="text-gray-600 text-center">No plants found.</p>
           )}
-          <div className="flex justify-around mt-4 rounded-full p-2">
+
+          <div className="flex justify-around mt-4 rounded-full p-2 space-x-4">
             <button
-              className={`${buttonColors.startInside} px-4 py-2 rounded-full`}
+              className={`${buttonColors.startInside} px-6 py-2 rounded-full`}
             >
               Start Inside
             </button>
             <button
-              className={`${buttonColors.transplant} px-4 py-2 rounded-full`}
+              className={`${buttonColors.transplant} px-6 py-2 rounded-full`}
             >
               Transplant
             </button>
             <button
-              className={`${buttonColors.sowOutside} px-4 py-2 rounded-full`}
+              className={`${buttonColors.sowOutside} px-6 py-2 rounded-full`}
             >
               Sow Outside
             </button>
             <button
-              className={`${buttonColors.beginHarvest} px-4 py-2 rounded-full`}
+              className={`${buttonColors.beginHarvest} px-6 py-2 rounded-full`}
             >
               Begin Harvest
             </button>
@@ -194,11 +174,12 @@ export default function PlantCalendar() {
         </div>
       </div>
 
+      {/* Modal for Selected Plant */}
       {selectedPlant && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-lg w-full">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold">
+              <h3 className="text-xl font-bold text-gray-800">
                 {selectedPlant.generalInfo.plantName} Planting Schedule
               </h3>
               <button
@@ -246,9 +227,9 @@ export default function PlantCalendar() {
                 return (
                   <div
                     key={month}
-                    className="p-2 rounded-lg shadow-md border relative text-center"
+                    className="p-4 rounded-lg shadow-md border relative text-center bg-gray-100 hover:bg-gray-200"
                   >
-                    <span className="text-sm font-semibold">{month}</span>
+                    <span className="text-sm font-semibold text-gray-800">{month}</span>
                     <div className="mt-2 space-y-1">
                       {isSpringStartIndoors && (
                         <p className="text-xs bg-pink-100 text-pink-600 rounded px-2">
@@ -288,7 +269,8 @@ export default function PlantCalendar() {
           </div>
         </div>
       )}
-      <Footer/>
+
+      <Footer />
     </>
   );
 }

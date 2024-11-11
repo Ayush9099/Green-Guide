@@ -2,40 +2,36 @@ import React, { useState, useEffect } from "react";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 import axiosInstance from "../axios";
-
-interface BlogPost {
-    _id: number;
-    title: string;
-    summary: string;
-    imageUrl: string[];
-    user: string;
-}
+import type { Blogs } from "../types";
 
 const Blog = () => {
-    const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-    const [newPost, setNewPost] = useState({ title: '', summary: '', imageUrl: [] as string[] });
+    const [blogs, setBlog] = useState<Blogs[]>([]);
+    const [newBlogs, setNewBlogs] = useState({ title: '', summary: '', imageUrl: '' });
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [showForm, setShowForm] = useState(false);
-
+    const token = localStorage.getItem("token");
+    
     useEffect(() => {
-        const fetchBlogs = async () => {
+        const fetchPosts = async () => {
             try {
                 const token = localStorage.getItem("token");
                 const response = await axiosInstance.get("/api/blogs/list", {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers : {
+                        Authorization : `Bearer ${token}`
+                    }
                 });
-                setBlogPosts(response.data);
+                setBlog(response.data);
             } catch (error) {
-                console.error("Error fetching blogs:", error);
+                console.error("Error fetching posts:", error);
             }
         };
 
-        fetchBlogs();
+        fetchPosts();
     }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setNewPost(prev => ({ ...prev, [name]: value }));
+        setNewBlogs(prev => ({ ...prev, [name]: value }));
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,91 +40,117 @@ const Blog = () => {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmitBlogs = async (e: React.FormEvent) => {
         e.preventDefault();
-
         const formData = new FormData();
-        formData.append("title", newPost.title);
-        formData.append("summary", newPost.summary);
+        formData.append("title", newBlogs.title);
+        formData.append("summary", newBlogs.summary);
         if (selectedImage) {
-            formData.append("imageUrl", selectedImage);
+            formData.append("imageUrl", selectedImage); 
         }
-
+        
         try {
-            const token = localStorage.getItem("token");
             const response = await axiosInstance.post("/api/blogs", formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
+                    "Content-Type": "multipart/form-data", 
                 },
             });
-            setBlogPosts((prev) => [...prev, response.data]);
-            setNewPost({ title: "", summary: "", imageUrl: [] });
+            setBlog((prev) => [...prev, response.data]);
+            setNewBlogs({ title: "", summary: "", imageUrl: "" });
             setSelectedImage(null);
             setShowForm(false);
         } catch (error) {
-            console.error("Error creating blog post:", error);
+            console.error("Error creating post:", error);
         }
-    };
+    };        
 
     return (
         <>
             <Header />
-            <div className="max-w-6xl mx-auto p-6 bg-gray-50">
-                <h1 className="text-4xl font-bold text-center mb-8 text-green-700">Blog</h1>
+            <div className="relative max-w-6xl mx-auto p-6 bg-gray-50">
+                <h1 className="text-4xl font-bold text-center mb-8 text-teal-700">Blogs</h1>
 
                 <button
-                    onClick={() => setShowForm(!showForm)}
-                    className="bg-green-700 text-white px-4 py-2 rounded-md mb-4"
+                    onClick={() => setShowForm(true)}
+                    className="bg-teal-700 text-white px-6 py-3 rounded-md mb-4 hover:bg-teal-800 transition-colors"
                 >
-                    {showForm ? "Cancel" : "Create New Post"}
+                    Create New Blog
                 </button>
 
-                {showForm && (
-                    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 mb-8">
-                        <h2 className="text-xl font-semibold mb-4">New Blog Post</h2>
-                        <input
-                            type="text"
-                            name="title"
-                            placeholder="Title"
-                            value={newPost.title}
-                            onChange={handleInputChange}
-                            required
-                            className="w-full p-2 border border-gray-300 rounded-md mb-4"
-                        />
-                        <textarea
-                            name="summary"
-                            placeholder="Summary"
-                            value={newPost.summary}
-                            onChange={handleInputChange}
-                            required
-                            className="w-full p-2 border border-gray-300 rounded-md mb-4"
-                        />
-                        <input
-                            type="file"
-                            name="image"
-                            onChange={handleImageChange}
-                            className="w-full p-2 border border-gray-300 rounded-md mb-4"
-                        />
-                        <button type="submit" className="bg-green-700 text-white px-4 py-2 rounded-md">
-                            Submit Post
-                        </button>
-                    </form>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {blogPosts.map(post => (
-                        <div key={post._id} className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:-translate-y-1 hover:shadow-xl">
-                            {post.imageUrl.map((url, index) => (
-                                <img key={index} src={url} alt={post.title} className="w-full h-48 object-cover" />
-                            ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {blogs.map((blog) => (
+                        <div key={blog._id} className="bg-white shadow-lg rounded-lg overflow-hidden">
+                            {blog.imageUrl && (
+                                <img src={blog.imageUrl} alt={blog.title} className="w-full h-48 object-cover" />
+                            )}
                             <div className="p-6">
-                                <h2 className="text-lg font-semibold">{post.title}</h2>
-                                <p className="text-gray-600 mt-2">{post.summary}</p>
+                                <h2 className="text-xl font-semibold text-gray-800">{blog.title}</h2>
+                                <p className="text-gray-600 mt-2">{blog.summary}</p>
                             </div>
                         </div>
                     ))}
                 </div>
+
+                {showForm && (
+                    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm">
+                        <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full space-y-6">
+                            <button
+                                onClick={() => setShowForm(false)}
+                                className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                            <h2 className="text-2xl font-semibold text-teal-700">New Blog</h2>
+
+                            <form onSubmit={handleSubmitBlogs}>
+                                <div className="mb-6">
+                                    <label htmlFor="title" className="block text-sm font-medium text-gray-600 mb-2">Title</label>
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        id="title"
+                                        placeholder="Enter post title"
+                                        value={newBlogs.title}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-700 transition duration-150"
+                                    />
+                                </div>
+                                <div className="mb-6">
+                                    <label htmlFor="summary" className="block text-sm font-medium text-gray-600 mb-2">Summary</label>
+                                    <textarea
+                                        name="summary"
+                                        id="summary"
+                                        placeholder="Enter post summary"
+                                        value={newBlogs.summary}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-teal-700 transition duration-150"
+                                    />
+                                </div>
+                                <div className="mb-6">
+                                    <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-600 mb-2">Image</label>
+                                    <input
+                                        type="file"
+                                        name="imageUrl"
+                                        id="imageUrl"
+                                        onChange={handleImageChange}
+                                        className="block w-full text-sm text-gray-500 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-teal-700 file:text-white hover:file:bg-teal-800"
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="bg-teal-700 text-white px-6 py-3 rounded-md shadow-md hover:bg-teal-800 transition-colors"
+                                >
+                                    Submit Post
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
             <Footer />
         </>

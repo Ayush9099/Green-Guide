@@ -1,26 +1,11 @@
 
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../Layout/Header";
 import axiosInstance from "../axios";
 import Footer from "../Layout/Footer";
-
-interface Plant {
-  _id: string;
-  generalInfo: {
-    plantName: string;
-  };
-}
-
-interface Garden {
-  _id: string;
-  name: string;
-  plants: string[];
-  last_watered: string;
-  fertilized_schedule: string;
-  growth_notes: string;
-  growth_images: File[];
-}
+import type { Plants , Garden } from "../types"
 
 const Garden: React.FC = () => {
   const [gardens, setGardens] = useState<Garden[]>([]);
@@ -32,7 +17,7 @@ const Garden: React.FC = () => {
     growth_notes: "",
     growth_images: [],
   });
-  const [plantOptions, setPlantOptions] = useState<Plant[]>([]);
+  const [plantOptions, setPlantOptions] = useState<Plants[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const navigate = useNavigate();
 
@@ -40,7 +25,7 @@ const Garden: React.FC = () => {
     const fetchPlants = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axiosInstance.get<Plant[]>("/api/plants/list", {
+        const response = await axiosInstance.get<Plants[]>("/api/plants/list", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setPlantOptions(response.data);
@@ -128,8 +113,8 @@ const Garden: React.FC = () => {
         const token = localStorage.getItem("token");
         await axiosInstance.delete(`/api/garden/${gardenId}`, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         setGardens(gardens.filter((_, i) => i !== index));
         alert("Garden deleted successfully!");
@@ -145,35 +130,35 @@ const Garden: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-50 ">
       <Header />
-      <main className="flex-grow max-w-4xl mx-auto p-6 bg-gray-50">
-        <h1 className="text-4xl font-bold text-center mb-8 text-green-700">
-          Your Gardens
+      <main className="flex-grow max-w-4xl mx-auto p-6 bg-white w-[35%] mt-5">
+        <h1 className="text-4xl font-semibold text-center mb-8 text-teal-700">
+          My Gardens
         </h1>
         {gardens.length === 0 ? (
           <div className="text-center">
             <p className="text-lg text-gray-600 mb-4">
-              No gardens yet. Start by adding one!
+              It looks like you haven't created any gardens yet. Start by adding your first one and grow something special!
             </p>
             <button
               onClick={() => setIsAdding(true)}
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-600 transition duration-200"
+              className="bg-teal-500 text-white px-6 py-3 rounded-lg shadow hover:bg-teal-600 transition duration-200"
             >
-              + New Garden
+              + Create Your Garden
             </button>
           </div>
         ) : (
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Your Gardens</h2>
+          <div className="" >
+            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Your Gardens</h2>
             <ul className="space-y-4">
               {gardens.map((garden, index) => (
                 <li
                   key={garden._id}
-                  className="bg-white shadow-md rounded-lg p-4 transition-transform hover:scale-105 flex justify-between items-center cursor-pointer"
+                  className="bg-white shadow-lg rounded-lg p-5 transition-all duration-200 hover:scale-105 cursor-pointer flex justify-between items-center"
                   onClick={() => handleGardenClick(garden._id)}
                 >
-                  <span>{garden.name}</span>
+                  <span className="text-lg font-medium text-gray-800">{garden.name}</span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -188,15 +173,19 @@ const Garden: React.FC = () => {
             </ul>
             <button
               onClick={() => setIsAdding(true)}
-              className="mt-6 bg-blue-500 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-600 transition duration-200"
+              className="mt-6 bg-teal-500 text-white px-6 py-3 rounded-lg shadow hover:bg-teal-600 transition duration-200"
             >
-              + New Garden
+              + Add Another Garden
             </button>
           </div>
         )}
+
         {isAdding && (
-          <div className="mt-6 bg-white p-6 rounded-lg shadow-md border border-gray-300">
-            <h3 className="text-xl font-semibold mb-4">Add New Garden</h3>
+          <div className="mt-6 bg-white p-6 rounded-lg shadow-lg border border-gray-300">
+            <h3 className="text-xl font-semibold text-gray-700 mb-4">Add a New Garden</h3>
+            <p className="text-sm text-gray-500 mb-4">
+              Fill in the details below to start your new garden. You can always come back to update it later!
+            </p>
             <input
               type="text"
               value={newGarden.name}
@@ -255,7 +244,7 @@ const Garden: React.FC = () => {
               onChange={(e) =>
                 setNewGarden({ ...newGarden, growth_notes: e.target.value })
               }
-              placeholder="Growth notes"
+              placeholder="Growth notes (optional)"
               className="border border-gray-300 p-3 rounded w-full mb-4 focus:outline-none focus:ring focus:ring-green-300 transition duration-200"
             ></textarea>
             <input
@@ -267,13 +256,14 @@ const Garden: React.FC = () => {
                   growth_images: Array.from(e.target.files || []),
                 })
               }
+              className="mb-4"
             />
             <div className="flex justify-end space-x-2">
               <button
                 onClick={handleAddGarden}
                 className="bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600 transition duration-200"
               >
-                Continue
+                Save Garden
               </button>
               <button
                 onClick={handleCancel}

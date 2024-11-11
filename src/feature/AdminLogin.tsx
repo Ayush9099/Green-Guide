@@ -1,50 +1,53 @@
+import React, { useState } from "react";
+import Header from "../Layout/Header";
+import { useNavigate } from "react-router-dom";
 
-import React, { useState } from 'react';
-import Header from '../Layout/Header';
-import axios from 'axios';
-import axiosInstance from '../axios';
-import { useNavigate } from 'react-router-dom';
-
-const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+const AdminLogin: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const response = await axiosInstance.post('/auth/login', {
-        email,
-        password,
-      });
+    // Dummy credentials for login
+    const dummyEmail = "123@gmail.com";
+    const dummyPassword = "123";
 
-      const { token, message } = response.data.data;
-      setMessage(message);
-      localStorage.setItem('token', token);
-      navigate('/');
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setMessage(error.response.data.message);
-      } else {
-        setMessage('An unexpected error occurred.');
-      }
+    // Clear any previous messages
+    setMessage(null);
+
+    // Simulate login logic
+    if (email === dummyEmail && password === dummyPassword) {
+      // Simulate successful login
+      localStorage.setItem("adminToken", "dummyToken");
+      navigate("/admin/dashboard"); // Redirect to admin dashboard
+    } else {
+      // Simulate failed login
+      setMessage("Invalid email or password. Please try again.");
     }
   };
 
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-r  flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-r from-teal-100 to-teal-300 flex items-center justify-center">
         <div className="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md">
-          <h2 className="text-3xl font-semibold text-center text-teal-700 mb-6">Sign In</h2>
+          <h2 className="text-3xl font-semibold text-center text-teal-700 mb-6">
+            Admin Sign In
+          </h2>
 
-          {message && <p className="text-center text-red-600 text-sm mb-6">{message}</p>}
+          {message && (
+            <p className="text-center text-red-600 text-sm mb-6">{message}</p>
+          )}
 
           <form onSubmit={handleLogin}>
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="email">
+              <label
+                className="block text-sm font-medium text-gray-700 mb-2"
+                htmlFor="email"
+              >
                 Email
               </label>
               <input
@@ -59,7 +62,10 @@ const Login: React.FC = () => {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="password">
+              <label
+                className="block text-sm font-medium text-gray-700 mb-2"
+                htmlFor="password"
+              >
                 Password
               </label>
               <input
@@ -80,15 +86,10 @@ const Login: React.FC = () => {
               Sign In
             </button>
           </form>
-
-          <div className="mt-6 text-center text-sm text-gray-600">
-            Don't have an account?{' '}
-            <a href="/register" className="text-teal-600 hover:underline">Sign up</a>
-          </div>
         </div>
       </div>
     </>
   );
 };
 
-export default Login;
+export default AdminLogin;
