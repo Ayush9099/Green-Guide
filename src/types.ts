@@ -68,6 +68,25 @@ export interface Blogs {
   user : string;
 }
 
+export interface TrefleData {
+  id: number; // Unique identifier for the plant
+  common_name: string; // Common name of the plant
+  scientific_name: string; // Scientific (taxonomic) name
+  family: string; // Family to which the plant belongs
+  genus: string; // Genus of the plant
+  image_url: string; // URL of an image representing the plant
+  description: string; // Description of the plant
+  light_requirements: string; // Light requirements (e.g., full sun, partial shade)
+  water_requirements: string; // Watering needs (e.g., low, moderate)
+  soil_type: string; // Preferred soil type (e.g., sandy, loamy)
+  growth_habit: string; // Growth habit (e.g., annual, perennial)
+  height: {
+    min: number; // Minimum height in cm
+    max: number; // Maximum height in cm
+  };
+  bloom_time: string; // Blooming period (e.g., spring, summer)
+}
+
 export interface User {
   _id: string;
   name: string;

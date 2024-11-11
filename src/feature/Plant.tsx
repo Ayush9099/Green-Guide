@@ -5,13 +5,64 @@ import { Link } from "react-router-dom";
 import axiosInstance from "../axios";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
-import type { FormData } from "../types";
 
 type FormDataSection =
   | "generalInfo"
   | "quickInfo"
   | "plantingTimes"
   | "detailedInfo";
+
+interface FormData {
+  generalInfo: {
+    plantName: string;
+    taxonomicName: string;
+    description: string;
+    category: string;
+    icon: string | File;
+    img: string | File;
+  };
+  quickInfo: {
+    slideBarOption: string;
+    plantingDepth: string;
+    waterPerWeek: string;
+    sunRequirement: string;
+    growingSeason: string;
+    frostTolerance: string;
+    germinationTime: {
+      duration: number;
+      unit: string;
+    };
+    maxHeight: {
+      height: number;
+      unit: string;
+    };
+    maturityTime: {
+      duration: number;
+      unit: string;
+    };
+    soilPH: string;
+    transplantingNotes: string;
+    springFrost: string;
+    fallFrost: string;
+  };
+  plantingTimes: {
+    springStartIndoors: string;
+    springTransplant: string;
+    springSowOutdoors: string;
+    fallStartIndoors: string;
+    fallTransplant: string;
+    fallSowOutdoors: string;
+  };
+  detailedInfo: {
+    growingFromSeed: string;
+    plantingConsiderations: string;
+    feeding: string;
+    harvesting: string;
+    storage: string;
+    pruning: string;
+    herbal: string;
+  };
+}
 
 interface TrefleData {
   id: number;
@@ -87,8 +138,6 @@ export default function PlantManagement() {
   const [plantsData, setPlantsData] = useState<any[]>([]);
   const [trefleData, setTrefleData] = useState<TrefleData[]>([]);
   const [selectedTreflePlant, setSelectedTreflePlant] = useState<string>("");
-  const [trefleData, setTrefleData] = useState<TrefleData[]>([]);
-  const [selectedTreflePlant, setSelectedTreflePlant] = useState<string>("");
 
   const slideBarOptions = [
     "16/square",
@@ -131,20 +180,8 @@ export default function PlantManagement() {
       try {
         const response = await axiosInstance.get("/api/plants/list");
         setPlantsData(response.data || []);
-        setPlantsData(response.data || []);
       } catch (error) {
         console.error("Error fetching plants data:", error);
-        setPlantsData([]);
-      }
-    };
-
-    const fetchTrefleData = async () => {
-      try {
-        const response = await axiosInstance.get("/api/trefle/list");
-        setTrefleData(response.data || []); // Ensure this is an array
-      } catch (error) {
-        console.error("Error fetching Trefle data:", error);
-        setTrefleData([]); // Set to empty array on error
         setPlantsData([]);
       }
     };
@@ -160,7 +197,6 @@ export default function PlantManagement() {
     };
 
     fetchPlantsData();
-    fetchTrefleData();
     fetchTrefleData();
   }, []);
 
@@ -204,10 +240,6 @@ export default function PlantManagement() {
     e: React.ChangeEvent<HTMLInputElement>,
     field: "icon" | "img"
   ) => {
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: "icon" | "img"
-  ) => {
     const file = e.target.files?.[0];
     if (file) {
       setFormData((prev) => ({
@@ -234,11 +266,10 @@ export default function PlantManagement() {
           ...prev.generalInfo,
           plantName: selectedPlant.common_name || "",
           taxonomicName: selectedPlant.scientific_name || "",
-          description: `${
-            selectedPlant.family_common_name
-              ? `Family: ${selectedPlant.family_common_name}. `
-              : ""
-          }${selectedPlant.bibliography}`,
+          description: `${selectedPlant.family_common_name
+            ? `Family: ${selectedPlant.family_common_name}. `
+            : ""
+            }${selectedPlant.bibliography}`,
           img: selectedPlant.image_url || "",
         },
         quickInfo: {
@@ -262,8 +293,6 @@ export default function PlantManagement() {
       Object.entries(formData.generalInfo).forEach(([key, value]) => {
         if (key === "icon" && value instanceof File) {
           formDataToSend.append(key, value, value.name);
-        if (key === "icon" && value instanceof File) {
-          formDataToSend.append(key, value, value.name);
         } else {
           formDataToSend.append(`generalInfo[${key}]`, value as string);
         }
@@ -271,12 +300,7 @@ export default function PlantManagement() {
 
       Object.entries(formData.quickInfo).forEach(([key, value]) => {
         if (typeof value === "object") {
-        if (typeof value === "object") {
           Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-            formDataToSend.append(
-              `quickInfo[${key}][${nestedKey}]`,
-              nestedValue.toString()
-            );
             formDataToSend.append(
               `quickInfo[${key}][${nestedKey}]`,
               nestedValue.toString()
@@ -298,52 +322,11 @@ export default function PlantManagement() {
       const response = await axiosInstance.post("/api/plants", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "Content-Type": "multipart/form-data",
         },
       });
       setPlantsData((prev) => [...prev, response.data]);
       setShowAddPlant(false);
       setFormData({
-        generalInfo: {
-          plantName: "",
-          taxonomicName: "",
-          description: "",
-          category: "",
-          icon: "",
-          img: "",
-        },
-        quickInfo: {
-          slideBarOption: "16/square",
-          plantingDepth: "",
-          waterPerWeek: "",
-          sunRequirement: "",
-          growingSeason: "",
-          frostTolerance: "",
-          germinationTime: { duration: 0, unit: "days" },
-          maxHeight: { height: 0, unit: "in" },
-          maturityTime: { duration: 0, unit: "days" },
-          soilPH: "",
-          transplantingNotes: "",
-          springFrost: "",
-          fallFrost: "",
-        },
-        plantingTimes: {
-          springStartIndoors: "",
-          springTransplant: "",
-          springSowOutdoors: "",
-          fallStartIndoors: "",
-          fallTransplant: "",
-          fallSowOutdoors: "",
-        },
-        detailedInfo: {
-          growingFromSeed: "",
-          plantingConsiderations: "",
-          feeding: "",
-          harvesting: "",
-          storage: "",
-          pruning: "",
-          herbal: "",
-        },
         generalInfo: {
           plantName: "",
           taxonomicName: "",
@@ -398,7 +381,6 @@ export default function PlantManagement() {
           Plant Management System
         </h1>
 
-
         <button
           onClick={() => setShowAddPlant(!showAddPlant)}
           className="mb-4 bg-teal-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-teal-700 transition duration-200"
@@ -428,42 +410,22 @@ export default function PlantManagement() {
               ))}
             </select>
 
-            <h2 className="text-xl font-semibold mb-2">
-              Select Trefle.io Plant
-            </h2>
-            <select
-              value={selectedTreflePlant}
-              onChange={handleTreflePlantSelect}
-              className="w-full p-2 mb-4 border rounded"
-            >
-              <option value="">Select a plant</option>
-              {trefleData.map((plant) => (
-                <option key={plant.id} value={plant.id}>
-                  {plant.common_name || plant.scientific_name}
-                </option>
-              ))}
-            </select>
-
             <h2 className="text-xl font-semibold mb-2">General Information</h2>
             <input
-              type="text"
               type="text"
               name="plantName"
               value={formData.generalInfo.plantName}
               onChange={(e) => handleChange(e, "generalInfo", "plantName")}
               placeholder="Plant Name"
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
               required
             />
             <input
-              type="text"
               type="text"
               name="taxonomicName"
               value={formData.generalInfo.taxonomicName}
               onChange={(e) => handleChange(e, "generalInfo", "taxonomicName")}
               placeholder="Taxonomic Name"
-              className="w-full p-2 mb-2 border rounded"
               className="w-full p-2 mb-2 border rounded"
             />
             <textarea
@@ -472,13 +434,11 @@ export default function PlantManagement() {
               onChange={(e) => handleChange(e, "generalInfo", "description")}
               placeholder="Description"
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
             />
             <select
               name="category"
               value={formData.generalInfo.category}
               onChange={(e) => handleChange(e, "generalInfo", "category")}
-              className="w-full p-2 mb-2 border rounded"
               className="w-full p-2 mb-2 border rounded"
               required
             >
@@ -494,7 +454,6 @@ export default function PlantManagement() {
               type="file"
               accept="image/*"
               onChange={(e) => handleFileChange(e, "icon")}
-              className="w-full p-2 mb-2 border rounded"
               className="w-full p-2 mb-2 border rounded"
             />
             <label className="block mb-2">Image:</label>
@@ -514,23 +473,10 @@ export default function PlantManagement() {
               )}
 
             <h2 className="text-xl font-semibold mb-2 mt-4">Quick Info</h2>
-              className="w-full p-2 mb-2 border rounded"
-            />
-            {formData.generalInfo.img &&
-              typeof formData.generalInfo.img === "string" && (
-                <img
-                  src={formData.generalInfo.img}
-                  alt="Selected plant"
-                  className="w-full h-auto mb-2 rounded"
-                />
-              )}
-
-            <h2 className="text-xl font-semibold mb-2 mt-4">Quick Info</h2>
             <select
               name="slideBarOption"
               value={formData.quickInfo.slideBarOption}
               onChange={(e) => handleChange(e, "quickInfo", "slideBarOption")}
-              className="w-full p-2 mb-2 border rounded"
               className="w-full p-2 mb-2 border rounded"
             >
               {slideBarOptions.map((option) => (
@@ -541,29 +487,24 @@ export default function PlantManagement() {
             </select>
             <input
               type="text"
-              type="text"
               name="plantingDepth"
               value={formData.quickInfo.plantingDepth}
               onChange={(e) => handleChange(e, "quickInfo", "plantingDepth")}
               placeholder="Planting Depth"
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
             />
             <input
-              type="text"
               type="text"
               name="waterPerWeek"
               value={formData.quickInfo.waterPerWeek}
               onChange={(e) => handleChange(e, "quickInfo", "waterPerWeek")}
               placeholder="Water Per Week"
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
             />
             <select
               name="sunRequirement"
               value={formData.quickInfo.sunRequirement}
               onChange={(e) => handleChange(e, "quickInfo", "sunRequirement")}
-              className="w-full p-2 mb-2 border rounded"
               className="w-full p-2 mb-2 border rounded"
               required
             >
@@ -579,7 +520,6 @@ export default function PlantManagement() {
               value={formData.quickInfo.growingSeason}
               onChange={(e) => handleChange(e, "quickInfo", "growingSeason")}
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
             >
               <option value="">Select Growing Season</option>
               {growingSeasons.map((season) => (
@@ -593,7 +533,6 @@ export default function PlantManagement() {
               value={formData.quickInfo.frostTolerance}
               onChange={(e) => handleChange(e, "quickInfo", "frostTolerance")}
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
             >
               <option value="">Select Frost Tolerance</option>
               {frostTolerances.map((tolerance) => (
@@ -604,7 +543,6 @@ export default function PlantManagement() {
             </select>
             <div className="flex gap-2 mb-2">
               <input
-                type="number"
                 type="number"
                 name="germinationTimeDuration"
                 value={formData.quickInfo.germinationTime.duration}
@@ -618,7 +556,6 @@ export default function PlantManagement() {
                 }
                 placeholder="Germination Time"
                 className="w-1/2 p-2 border rounded"
-                className="w-1/2 p-2 border rounded"
               />
               <select
                 name="germinationTimeUnit"
@@ -626,7 +563,6 @@ export default function PlantManagement() {
                 onChange={(e) =>
                   handleNestedChange(e, "quickInfo", "germinationTime", "unit")
                 }
-                className="w-1/2 p-2 border rounded"
                 className="w-1/2 p-2 border rounded"
               >
                 {timeUnits.map((unit) => (
@@ -639,14 +575,12 @@ export default function PlantManagement() {
             <div className="flex gap-2 mb-2">
               <input
                 type="number"
-                type="number"
                 name="maxHeightHeight"
                 value={formData.quickInfo.maxHeight.height}
                 onChange={(e) =>
                   handleNestedChange(e, "quickInfo", "maxHeight", "height")
                 }
                 placeholder="Max Height"
-                className="w-1/2 p-2 border rounded"
                 className="w-1/2 p-2 border rounded"
               />
               <select
@@ -655,7 +589,6 @@ export default function PlantManagement() {
                 onChange={(e) =>
                   handleNestedChange(e, "quickInfo", "maxHeight", "unit")
                 }
-                className="w-1/2 p-2 border rounded"
                 className="w-1/2 p-2 border rounded"
               >
                 {heightUnits.map((unit) => (
@@ -668,14 +601,12 @@ export default function PlantManagement() {
             <div className="flex gap-2 mb-2">
               <input
                 type="number"
-                type="number"
                 name="maturityTimeDuration"
                 value={formData.quickInfo.maturityTime.duration}
                 onChange={(e) =>
                   handleNestedChange(e, "quickInfo", "maturityTime", "duration")
                 }
                 placeholder="Maturity Time"
-                className="w-1/2 p-2 border rounded"
                 className="w-1/2 p-2 border rounded"
               />
               <select
@@ -684,7 +615,6 @@ export default function PlantManagement() {
                 onChange={(e) =>
                   handleNestedChange(e, "quickInfo", "maturityTime", "unit")
                 }
-                className="w-1/2 p-2 border rounded"
                 className="w-1/2 p-2 border rounded"
                 required
               >
@@ -697,12 +627,10 @@ export default function PlantManagement() {
             </div>
             <input
               type="text"
-              type="text"
               name="soilPH"
               value={formData.quickInfo.soilPH}
               onChange={(e) => handleChange(e, "quickInfo", "soilPH")}
               placeholder="Soil pH"
-              className="w-full p-2 mb-2 border rounded"
               className="w-full p-2 mb-2 border rounded"
             />
             <textarea
@@ -713,10 +641,8 @@ export default function PlantManagement() {
               }
               placeholder="Transplanting Notes"
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
             />
 
-            <h2 className="text-xl font-semibold mb-2 mt-4">Planting Times</h2>
             <h2 className="text-xl font-semibold mb-2 mt-4">Planting Times</h2>
             {Object.entries({
               springFrost: formData.quickInfo.springFrost,
@@ -754,20 +680,11 @@ export default function PlantManagement() {
                       )
                     }
                     className="w-full p-2 border rounded"
-                    onChange={(e) =>
-                      handleChange(
-                        e,
-                        key.includes("Frost") ? "quickInfo" : "plantingTimes",
-                        key
-                      )
-                    }
-                    className="w-full p-2 border rounded"
                   />
                 </div>
               );
             })}
 
-            <h2 className="text-xl font-semibold mb-2 mt-4">Detailed Info</h2>
             <h2 className="text-xl font-semibold mb-2 mt-4">Detailed Info</h2>
             <textarea
               name="growingFromSeed"
@@ -776,7 +693,6 @@ export default function PlantManagement() {
                 handleChange(e, "detailedInfo", "growingFromSeed")
               }
               placeholder="Growing From Seed"
-              className="w-full p-2 mb-2 border rounded"
               className="w-full p-2 mb-2 border rounded"
             />
             <textarea
@@ -787,14 +703,12 @@ export default function PlantManagement() {
               }
               placeholder="Planting Considerations"
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
             />
             <textarea
               name="feeding"
               value={formData.detailedInfo.feeding}
               onChange={(e) => handleChange(e, "detailedInfo", "feeding")}
               placeholder="Feeding"
-              className="w-full p-2 mb-2 border rounded"
               className="w-full p-2 mb-2 border rounded"
             />
             <textarea
@@ -803,14 +717,12 @@ export default function PlantManagement() {
               onChange={(e) => handleChange(e, "detailedInfo", "harvesting")}
               placeholder="Harvesting"
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
             />
             <textarea
               name="storage"
               value={formData.detailedInfo.storage}
               onChange={(e) => handleChange(e, "detailedInfo", "storage")}
               placeholder="Storage"
-              className="w-full p-2 mb-2 border rounded"
               className="w-full p-2 mb-2 border rounded"
             />
             <textarea
@@ -819,7 +731,6 @@ export default function PlantManagement() {
               onChange={(e) => handleChange(e, "detailedInfo", "pruning")}
               placeholder="Pruning"
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
             />
             <textarea
               name="herbal"
@@ -827,11 +738,9 @@ export default function PlantManagement() {
               onChange={(e) => handleChange(e, "detailedInfo", "herbal")}
               placeholder="Herbal Use"
               className="w-full p-2 mb-2 border rounded"
-              className="w-full p-2 mb-2 border rounded"
             />
             <button
               type="submit"
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
               className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
             >
               Submit
@@ -855,6 +764,7 @@ export default function PlantManagement() {
                       className="w-full h-64 object-cover rounded-lg transition-all duration-300 transform hover:scale-110"
                     />
                   </Link>
+
                 </div>
 
                 <h3 className="text-2xl font-semibold text-gray-800 mt-4">
@@ -885,7 +795,7 @@ export default function PlantManagement() {
               <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-gray-500 mb-6"></div>
               <p className="text-xl mb-4">No plants found. Start growing!</p>
               <button
-                onClick={() => {}}
+                onClick={() => { }}
                 className="mt-4 bg-teal-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-teal-600 transition duration-300"
               >
                 + Add Your First Plant
@@ -893,6 +803,8 @@ export default function PlantManagement() {
             </div>
           )}
         </div>
+
+
       </div>
       <Footer />
     </>
