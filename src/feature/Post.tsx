@@ -3,7 +3,6 @@ import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 import axiosInstance from "../axios";
 import type { Post } from "../types";
-
 const Post = () => {
     const [posts, setPosts] = useState<Post[]>([]);
     const [newPost, setNewPost] = useState({ title: '', summary: '', image: '' });
@@ -11,7 +10,6 @@ const Post = () => {
     const [showForm, setShowForm] = useState(false);
     const [newComment, setNewComment] = useState<string>('');
     const [activePostId, setActivePostId] = useState<string | null>(null);
-
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -21,21 +19,17 @@ const Post = () => {
                 console.error("Error fetching posts:", error);
             }
         };
-
         fetchPosts();
     }, []);
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setNewPost(prev => ({ ...prev, [name]: value }));
     };
-
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setSelectedImage(e.target.files[0]);
         }
     };
-
     const handleSubmitPost = async (e: React.FormEvent) => {
         e.preventDefault();
         const formData = new FormData();
@@ -44,7 +38,6 @@ const Post = () => {
         if (selectedImage) {
             formData.append("image", selectedImage);
         }
-    
         try {
             const token = localStorage.getItem("token");
             const response = await axiosInstance.post("/api/post/create", formData, {
@@ -53,7 +46,6 @@ const Post = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-    
             setPosts((prev) => [...prev, response.data]);
             setNewPost({ title: "", summary: "", image: "" });
             setSelectedImage(null);
@@ -62,24 +54,20 @@ const Post = () => {
             console.error("Error creating post:", error);
             alert("There was an error submitting your post. Please try again.");
         }
-    };    
-
+    };
     const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setNewComment(e.target.value);
     };
-
     const handleSubmitComment = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newComment.trim() || !activePostId) return;
-
         try {
             const token = localStorage.getItem("token");
             const response = await axiosInstance.post(
-                `/api/post/${activePostId}/comments`, 
+                `/api/post/${activePostId}/comments`,
                 { content: newComment },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-
             setPosts((prev) =>
                 prev.map(post =>
                     post._id === activePostId ? { ...post, comments: [...post.comments, response.data] } : post
@@ -90,20 +78,17 @@ const Post = () => {
             console.error("Error adding comment:", error);
         }
     };
-
     return (
         <>
             <Header />
             <div className="relative max-w-6xl mx-auto p-6 bg-gray-50">
                 <h1 className="text-4xl font-bold text-center mb-8 text-teal-700">Posts</h1>
-
                 <button
                     onClick={() => setShowForm(true)}
                     className="bg-teal-700 text-white px-6 py-3 rounded-md mb-4 hover:bg-teal-800 transition-colors"
                 >
                     Create New Post
                 </button>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {posts.map((post) => (
                         <div key={post._id} className="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -113,7 +98,6 @@ const Post = () => {
                             <div className="p-6">
                                 <h2 className="text-xl font-semibold text-gray-800">{post.title}</h2>
                                 <p className="text-gray-600 mt-2">{post.summary}</p>
-
                                 <div className="mt-4">
                                     <h3 className="text-lg font-semibold text-gray-700">Comments</h3>
                                     {post.comments.length === 0 ? (
@@ -156,11 +140,11 @@ const Post = () => {
                         </div>
                     ))}
                 </div>
-
                 {/* Modal Form for creating post */}
                 {showForm && (
                     <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm">
-                        <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full space-y-6">
+                        <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg w-full space-y-6 relative">
+                            {/* Cancel Button */}
                             <button
                                 onClick={() => setShowForm(false)}
                                 className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
@@ -170,7 +154,6 @@ const Post = () => {
                                 </svg>
                             </button>
                             <h2 className="text-2xl font-semibold text-teal-700">New Post</h2>
-
                             <form onSubmit={handleSubmitPost}>
                                 <div className="mb-6">
                                     <label htmlFor="title" className="block text-sm font-medium text-gray-600 mb-2">Title</label>
@@ -222,5 +205,4 @@ const Post = () => {
         </>
     );
 };
-
 export default Post;
