@@ -5,7 +5,7 @@ import Header from "../Layout/Header";
 import { Search, X } from "lucide-react";
 import axiosInstance from "../axios";
 import Footer from "../Layout/Footer";
-import { Plant , PlantSchedule } from "../types"
+import { Plant, PlantSchedule } from "../types";
 
 const months = [
   "Jan",
@@ -109,9 +109,13 @@ export default function PlantCalendar() {
                   onClick={() => setSelectedPlant(plant)}
                 >
                   <img
-                    src={plant.generalInfo.img}
+                    src={
+                      typeof plant.generalInfo.img === "string"
+                        ? plant.generalInfo.img
+                        : URL.createObjectURL(plant.generalInfo.img)
+                    }
                     alt={plant.generalInfo.plantName}
-                    className="w-16 h-16 mr-4 rounded-full shadow-md"
+                    className="w-full h-48 object-cover rounded-lg mb-4"
                   />
                   <div className="flex-grow">
                     <h3 className="text-lg font-semibold mb-1 text-gray-800">
@@ -229,7 +233,9 @@ export default function PlantCalendar() {
                     key={month}
                     className="p-4 rounded-lg shadow-md border relative text-center bg-gray-100 hover:bg-gray-200"
                   >
-                    <span className="text-sm font-semibold text-gray-800">{month}</span>
+                    <span className="text-sm font-semibold text-gray-800">
+                      {month}
+                    </span>
                     <div className="mt-2 space-y-1">
                       {isSpringStartIndoors && (
                         <p className="text-xs bg-pink-100 text-pink-600 rounded px-2">
