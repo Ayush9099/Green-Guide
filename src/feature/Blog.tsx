@@ -14,12 +14,7 @@ const Blog = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const token = localStorage.getItem("token");
-                const response = await axiosInstance.get("/api/blogs/list", {
-                    headers : {
-                        Authorization : `Bearer ${token}`
-                    }
-                });
+                const response = await axiosInstance.get("/api/blogs/list");
                 setBlog(response.data);
             } catch (error) {
                 console.error("Error fetching posts:", error);
