@@ -69,22 +69,21 @@ export interface Blogs {
 }
 
 export interface TrefleData {
-  id: number; // Unique identifier for the plant
-  common_name: string; // Common name of the plant
-  scientific_name: string; // Scientific (taxonomic) name
-  family: string; // Family to which the plant belongs
-  genus: string; // Genus of the plant
-  image_url: string; // URL of an image representing the plant
-  description: string; // Description of the plant
-  light_requirements: string; // Light requirements (e.g., full sun, partial shade)
-  water_requirements: string; // Watering needs (e.g., low, moderate)
-  soil_type: string; // Preferred soil type (e.g., sandy, loamy)
-  growth_habit: string; // Growth habit (e.g., annual, perennial)
-  height: {
-    min: number; // Minimum height in cm
-    max: number; // Maximum height in cm
-  };
-  bloom_time: string; // Blooming period (e.g., spring, summer)
+  id: number;
+  common_name: string;
+  slug: string;
+  scientific_name: string;
+  year: number;
+  bibliography: string;
+  author: string;
+  status: string;
+  rank: string;
+  family_common_name: string | null;
+  genus_id: number;
+  image_url: string;
+  synonyms: string[];
+  genus: string;
+  family: string;
 }
 
 export interface User {
@@ -106,7 +105,7 @@ export interface Plants {
   generalInfo: {
     plantName: string;
   };
-} // for garden
+} 
 
 export interface Garden {
   _id: string;
@@ -126,10 +125,38 @@ export interface PlantSchedule {
 }
 
 export interface Plant {
-  _id: string;
+  _id : string ;
   generalInfo: {
     plantName: string;
-    img: string;
+    taxonomicName: string;
+    description: string;
+    category: string;
+    icon: string | File;
+    img: string | File;
+  };
+  quickInfo: {
+    slideBarOption: string;
+    plantingDepth: string;
+    waterPerWeek: string;
+    sunRequirement: string;
+    growingSeason: string;
+    frostTolerance: string;
+    germinationTime: {
+      duration: number;
+      unit: string;
+    };
+    maxHeight: {
+      height: number;
+      unit: string;
+    };
+    maturityTime: {
+      duration: number;
+      unit: string;
+    };
+    soilPH: string;
+    transplantingNotes: string;
+    springFrost: string;
+    fallFrost: string;
   };
   plantingTimes: {
     springStartIndoors: string;
@@ -139,4 +166,19 @@ export interface Plant {
     fallTransplant: string;
     fallSowOutdoors: string;
   };
-}  // for calendar
+  detailedInfo: {
+    growingFromSeed: string;
+    plantingConsiderations: string;
+    feeding: string;
+    harvesting: string;
+    storage: string;
+    pruning: string;
+    herbal: string;
+  };
+}
+
+export interface Review {
+  _id: string;
+  review: string;
+  user: { name: string };
+}

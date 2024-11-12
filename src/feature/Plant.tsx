@@ -5,82 +5,13 @@ import { Link } from "react-router-dom";
 import axiosInstance from "../axios";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
+import type { FormData , TrefleData} from "../types";
 
 type FormDataSection =
   | "generalInfo"
   | "quickInfo"
   | "plantingTimes"
   | "detailedInfo";
-
-interface FormData {
-  generalInfo: {
-    plantName: string;
-    taxonomicName: string;
-    description: string;
-    category: string;
-    icon: string | File;
-    img: string | File;
-  };
-  quickInfo: {
-    slideBarOption: string;
-    plantingDepth: string;
-    waterPerWeek: string;
-    sunRequirement: string;
-    growingSeason: string;
-    frostTolerance: string;
-    germinationTime: {
-      duration: number;
-      unit: string;
-    };
-    maxHeight: {
-      height: number;
-      unit: string;
-    };
-    maturityTime: {
-      duration: number;
-      unit: string;
-    };
-    soilPH: string;
-    transplantingNotes: string;
-    springFrost: string;
-    fallFrost: string;
-  };
-  plantingTimes: {
-    springStartIndoors: string;
-    springTransplant: string;
-    springSowOutdoors: string;
-    fallStartIndoors: string;
-    fallTransplant: string;
-    fallSowOutdoors: string;
-  };
-  detailedInfo: {
-    growingFromSeed: string;
-    plantingConsiderations: string;
-    feeding: string;
-    harvesting: string;
-    storage: string;
-    pruning: string;
-    herbal: string;
-  };
-}
-
-interface TrefleData {
-  id: number;
-  common_name: string;
-  slug: string;
-  scientific_name: string;
-  year: number;
-  bibliography: string;
-  author: string;
-  status: string;
-  rank: string;
-  family_common_name: string | null;
-  genus_id: number;
-  image_url: string;
-  synonyms: string[];
-  genus: string;
-  family: string;
-}
 
 export default function PlantManagement() {
   const [showAddPlant, setShowAddPlant] = useState(false);

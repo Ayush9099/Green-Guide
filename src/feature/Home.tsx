@@ -1,38 +1,27 @@
-
 "use client";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 import axiosInstance from "../axios";
-
-interface Plant {
-  _id: string;
-  generalInfo: {
-    plantName: string;
-    img: string;
-  };
-}
-
-interface Review {
-  _id: string;
-  review: string;
-  user: { name: string };
-}
+import type { Plant , Review} from "../types";
 
 const Home: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [plantsData, setPlantsData] = useState<Plant[]>([]);
   const [reviewText, setReviewText] = useState("");
   const [category, setCategory] = useState("");
   const [searchResults, setSearchResults] = useState<Plant[]>([]);
   const navigate = useNavigate();
-  const popularPlants = [
-    { name: "Snake Plant", family: "Asparagaceae", img: "/1.jpg" },
-    { name: "Spider Plant", family: "Asparagaceae", img: "/2.jpg" },
-    { name: "Pothos", family: "Araceae", img: "/3.jpg" },
-    { name: "Peace Lily", family: "Araceae", img: "/4.jpg" },
-    { name: "Fiddle Leaf Fig", family: "Moraceae", img: "/5.jpg" },
-  ];
+
+  const fetchPlants = async () => {
+    try {
+      const response = await axiosInstance.get("/api/plants/list");
+      setPlantsData(response.data || []);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
 
   const fetchReviews = async () => {
     try {
@@ -45,6 +34,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     fetchReviews();
+    fetchPlants();
   }, []);
 
   const handleReviewSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -111,7 +101,8 @@ const Home: React.FC = () => {
               Welcome to Green Guide
             </h1>
             <p className="text-lg sm:text-xl mb-6 text-gray-200">
-              Discover plant care tips, seasonal guides, and connect with a vibrant community.
+              Discover plant care tips, seasonal guides, and connect with a
+              vibrant community.
             </p>
             <Link
               to="/blog"
@@ -125,9 +116,12 @@ const Home: React.FC = () => {
         {/* Search Plants Section */}
         <section className="bg-white py-14">
           <div className="container mx-auto text-center">
-            <h2 className="text-3xl font-semibold text-gray-800 mb-6">Search Plants by Category</h2>
+            <h2 className="text-3xl font-semibold text-gray-800 mb-6">
+              Search Plants by Category
+            </h2>
             <p className="text-lg text-gray-600 mb-6">
-              Looking for a specific plant? Use the search bar to explore plants by family or category.
+              Looking for a specific plant? Use the search bar to explore plants
+              by family or category.
             </p>
             <input
               type="text"
@@ -143,7 +137,9 @@ const Home: React.FC = () => {
         {searchResults.length > 0 && (
           <section className="py-16 bg-gray-100">
             <div className="container mx-auto">
-              <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">Search Results</h2>
+              <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">
+                Search Results
+              </h2>
               <ul className="space-y-4">
                 {searchResults.map((plant) => (
                   <li
@@ -151,7 +147,9 @@ const Home: React.FC = () => {
                     className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 cursor-pointer"
                     onClick={() => handlePlantClick(plant._id)}
                   >
-                    <h3 className="text-xl font-semibold text-gray-800">{plant.generalInfo.plantName}</h3>
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      {plant.generalInfo.plantName}
+                    </h3>
                   </li>
                 ))}
               </ul>
@@ -162,21 +160,34 @@ const Home: React.FC = () => {
         {/* Popular Plants Section */}
         <section className="py-16 bg-white">
           <div className="container mx-auto text-center">
-            <h2 className="text-3xl font-semibold text-gray-800 mb-8">Popular Plants</h2>
-            <p className="text-lg text-gray-600 mb-6">Discover the most popular and easy-to-care-for plants.</p>
+            <h2 className="text-3xl font-semibold text-gray-800 mb-8">
+              Popular Plants
+            </h2>
+            <p className="text-lg text-gray-600 mb-6">
+              Discover the most popular and easy-to-care-for plants.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {popularPlants.map((plant, index) => (
+              {plantsData.slice(0, 6).map((plant) => (
                 <div
-                  key={index}
-                  className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300"
+                  key={plant._id}
+                  className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 cursor-pointer"
+                  onClick={() => handlePlantClick(plant._id)}
                 >
                   <img
-                    src={plant.img}
-                    alt={plant.name}
+                    src={
+                      typeof plant.generalInfo.img === "string"
+                        ? plant.generalInfo.img
+                        : URL.createObjectURL(plant.generalInfo.img)
+                    }
+                    alt={plant.generalInfo.plantName}
                     className="w-full h-48 object-cover rounded-lg mb-4"
                   />
-                  <h3 className="text-xl font-semibold text-gray-800">{plant.name}</h3>
-                  <p className="text-gray-600">{plant.family}</p>
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    {plant.generalInfo.plantName}
+                  </h3>
+                  <p className="text-gray-600">
+                    {plant.generalInfo.taxonomicName}
+                  </p>
                 </div>
               ))}
             </div>
@@ -186,8 +197,12 @@ const Home: React.FC = () => {
         {/* User Reviews Section */}
         <section className="py-12 bg-gray-100">
           <div className="container mx-auto text-center">
-            <h2 className="text-3xl font-semibold text-gray-800 mb-8">User Reviews</h2>
-            <p className="text-lg text-gray-600 mb-6">See what our plant community has to say about their experiences!</p>
+            <h2 className="text-3xl font-semibold text-gray-800 mb-8">
+              User Reviews
+            </h2>
+            <p className="text-lg text-gray-600 mb-6">
+              See what our plant community has to say about their experiences!
+            </p>
             <div className="max-w-xl mx-auto mb-8">
               <form onSubmit={handleReviewSubmit} className="space-y-6">
                 <textarea
@@ -212,7 +227,9 @@ const Home: React.FC = () => {
                   className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300"
                 >
                   <p className="text-gray-800">{review.review}</p>
-                  <p className="text-gray-500 text-right mt-2">- {review.user.name}</p>
+                  <p className="text-gray-500 text-right mt-2">
+                    - {review.user.name}
+                  </p>
                 </div>
               ))}
             </div>
@@ -222,20 +239,37 @@ const Home: React.FC = () => {
         {/* Explore Features Section */}
         <section className="bg-gray-100 py-7">
           <div className="container mx-auto text-center">
-            <h2 className="text-3xl font-semibold text-gray-800 mb-8">Explore More Features</h2>
-            <p className="text-lg text-gray-600 mb-6">Join our plant care journey with exclusive features!</p>
+            <h2 className="text-3xl font-semibold text-gray-800 mb-8">
+              Explore More Features
+            </h2>
+            <p className="text-lg text-gray-600 mb-6">
+              Join our plant care journey with exclusive features!
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
               <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Plant Care Calendar</h3>
-                <p className="text-gray-600">Stay on top of seasonal tasks and reminders for thriving plants.</p>
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                  Plant Care Calendar
+                </h3>
+                <p className="text-gray-600">
+                  Stay on top of seasonal tasks and reminders for thriving
+                  plants.
+                </p>
               </div>
               <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Plant Database</h3>
-                <p className="text-gray-600">Access detailed care guides and resources for every plant.</p>
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                  Plant Database
+                </h3>
+                <p className="text-gray-600">
+                  Access detailed care guides and resources for every plant.
+                </p>
               </div>
               <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Community Forum</h3>
-                <p className="text-gray-600">Connect with plant lovers, share tips, and get expert advice.</p>
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                  Community Forum
+                </h3>
+                <p className="text-gray-600">
+                  Connect with plant lovers, share tips, and get expert advice.
+                </p>
               </div>
             </div>
           </div>
