@@ -44,7 +44,7 @@ const Post = () => {
         if (selectedImage) {
             formData.append("image", selectedImage);
         }
-
+    
         try {
             const token = localStorage.getItem("token");
             const response = await axiosInstance.post("/api/post/create", formData, {
@@ -53,14 +53,16 @@ const Post = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
+    
             setPosts((prev) => [...prev, response.data]);
             setNewPost({ title: "", summary: "", image: "" });
             setSelectedImage(null);
             setShowForm(false);
         } catch (error) {
             console.error("Error creating post:", error);
+            alert("There was an error submitting your post. Please try again.");
         }
-    };
+    };    
 
     const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setNewComment(e.target.value);
