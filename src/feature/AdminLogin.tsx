@@ -11,7 +11,6 @@ const AdminLogin: React.FC = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Dummy credentials for login
     const dummyEmail = "123@gmail.com";
     const dummyPassword = "123";
 

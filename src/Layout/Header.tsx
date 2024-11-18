@@ -48,7 +48,7 @@ const Header: React.FC = () => {
         {/* Navigation Links */}
         <nav className="flex flex-wrap space-x-4 mt-4 md:mt-0">
           <a
-            href="/"
+            href="/home"
             className="flex items-center text-sm font-medium text-gray-700 hover:text-teal-600 transition px-3 py-1"
           >
             <FaHome className="mr-2 text-lg" /> Home

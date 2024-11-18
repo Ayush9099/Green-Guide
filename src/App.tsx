@@ -44,7 +44,7 @@ const App = () => {
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/listofplants" element={<ListOfPlants />} />
           <Route path="/admin/addplant" element={<AddPlant />} />
-          <Route path="/admin/editplant" element={<EditPlant />} />
+          <Route path="/admin/editplant/:id" element={<EditPlant />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
