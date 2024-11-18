@@ -1,10 +1,18 @@
 import { useState } from 'react';
-import { FaLeaf, FaSeedling } from 'react-icons/fa';
+import { FaLeaf, FaSeedling, FaSignOutAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import ListOfPlants from './ListOfPlants';
 import AddPlant from './AddPlant';
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('list');
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        // Clear any authentication tokens or user data here (if applicable)
+        localStorage.removeItem('authToken'); // Example for token removal, adjust as needed
+        navigate('/'); // Redirect to homepage
+    };
 
     const renderContent = () => {
         switch (activeTab) {
@@ -41,6 +49,16 @@ const Dashboard = () => {
                         </button>
                     </li>
                 </ul>
+
+                {/* Logout button */}
+                <div className="mt-8">
+                    <button
+                        onClick={handleLogout}
+                        className="w-full text-left flex items-center p-3 rounded-lg hover:bg-red-400 transition duration-300"
+                    >
+                        <FaSignOutAlt className="mr-3 text-xl" /> Logout
+                    </button>
+                </div>
             </nav>
 
             <main className="flex-1 p-8 bg-gray-100 overflow-auto">
