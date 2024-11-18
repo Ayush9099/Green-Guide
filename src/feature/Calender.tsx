@@ -105,7 +105,7 @@ export default function PlantCalendar() {
               return (
                 <div
                   key={plant._id}
-                  className="flex items-center bg-gray-100 rounded-lg shadow-md p-4 mb-4 transition-transform hover:bg-gray-200 cursor-pointer"
+                  className="flex items-start bg-gray-100 rounded-lg shadow-md p-4 mb-4 transition-transform hover:bg-gray-200 cursor-pointer"
                   onClick={() => setSelectedPlant(plant)}
                 >
                   <img
@@ -115,13 +115,15 @@ export default function PlantCalendar() {
                         : URL.createObjectURL(plant.generalInfo.img)
                     }
                     alt={plant.generalInfo.plantName}
-                    className="w-full h-48 object-cover rounded-lg mb-4"
+                    className="w-48 h-48 object-cover rounded-lg mb-2 mr-4" // Add margin-right for spacing
                   />
                   <div className="flex-grow">
-                    <h3 className="text-lg font-semibold mb-1 text-gray-800">
+                    <h3 className="text-lg font-semibold mb-2 text-gray-800">
                       {plant.generalInfo.plantName}
                     </h3>
-                    <div className="flex">
+                    <div className="flex gap-1 mt-2">
+                      {" "}
+                      {/* Adds space between calendar columns */}
                       {months.map((month, index) => (
                         <div
                           key={month}

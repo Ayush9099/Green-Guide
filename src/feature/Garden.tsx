@@ -148,53 +148,63 @@ const Garden: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 ">
       <Header />
-      <main className="flex-grow max-w-4xl mx-auto p-6 bg-white w-[35%] mt-5">
-        <h1 className="text-4xl font-semibold text-center mb-8 text-teal-700">
-          My Gardens
+      <main className="flex-grow max-w-6xl mx-auto p-6 w-full mt-5">
+
+        <h1 className="text-5xl font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-500">
+          My Futuristic Gardens
         </h1>
         {gardens.length === 0 ? (
-          <div className="text-center">
-            <p className="text-lg text-gray-600 mb-4">
-              It looks like you haven't created any gardens yet. Start by adding your first one and grow something special!
+          <div className="text-center bg-gray-200 p-8 rounded-xl shadow-lg">
+            <p className="text-xl text-gray-300 mb-6">
+              It looks like you haven't created any gardens yet. Start by adding your first one and grow something extraordinary!
             </p>
             <button
               onClick={() => setIsAdding(true)}
-              className="bg-teal-500 text-white px-6 py-3 rounded-lg shadow hover:bg-teal-600 transition duration-200"
+              className="bg-teal-600 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-teal-700 transition duration-300 transform hover:scale-105"
             >
               + Create Your Garden
             </button>
           </div>
         ) : (
-          <div className="" >
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Your Gardens</h2>
-            <ul className="space-y-4">
-              {gardens.map((garden, index) => (
-                <li
-                  key={garden._id}
-                  className="bg-white shadow-lg rounded-lg p-5 transition-all duration-200 hover:scale-105 cursor-pointer flex justify-between items-center"
-                  onClick={() => handleGardenClick(garden._id)}
-                >
-                  <span className="text-lg font-medium text-gray-800">{garden.name}</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {gardens.map((garden, index) => (
+              <div
+                key={garden._id}
+                className="bg-gray-100 rounded-xl p-6 shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer"
+                onClick={() => handleGardenClick(garden._id)}
+              >
+                <h3 className="text-2xl font-semibold mb-4 text-blue-400">{garden.name}</h3>
+
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-black">Plants:</span>
+                  <span className="text-lg font-medium">{garden.plants.length}</span>
+                </div>
+                <div className="flex justify-between">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDeleteGarden(index, garden._id);
                     }}
-                    className="bg-red-500 text-white px-3 py-1 rounded-lg shadow hover:bg-red-600 transition duration-200"
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition duration-200"
                   >
                     Delete
                   </button>
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={() => setIsAdding(true)}
-              className="mt-6 bg-teal-500 text-white px-6 py-3 rounded-lg shadow hover:bg-teal-600 transition duration-200"
-            >
-              + Add Another Garden
-            </button>
+                  <button
+                    className="bg-teal-600 text-white px-4 py-2 rounded-lg shadow hover:bg-teal-700 transition duration-200"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
+        <button
+          onClick={() => setIsAdding(true)}
+          className="mt-12 bg-teal-800 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-teal-900 transition duration-300 transform hover:scale-105 block mx-auto"
+        >
+          + Add Another Garden
+        </button>
 
         {isAdding && (
           <div className="mt-6 bg-white p-6 rounded-lg shadow-lg border border-gray-300">

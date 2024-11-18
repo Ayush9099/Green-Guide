@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Header from '../Layout/Header';
 import axios from 'axios';
 import axiosInstance from '../axios';
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +33,6 @@ const Register: React.FC = () => {
 
     return (
         <>
-            <Header />
             <div className="min-h-screen flex items-center justify-center ">
                 <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
                     <h2 className="text-4xl font-bold text-gray-800 mb-8 text-center tracking-tight">Create Account</h2>
@@ -91,7 +89,7 @@ const Register: React.FC = () => {
 
                     <div className="mt-6 text-center text-sm text-gray-600">
                         Already have an account?{' '}
-                        <a href="/signin" className="text-teal-600 hover:underline">Sign in</a>
+                        <a href="/" className="text-teal-600 hover:underline">Sign in</a>
                     </div>
                 </div>
             </div>

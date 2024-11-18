@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import Header from '../Layout/Header';
 import axios from 'axios';
 import axiosInstance from '../axios';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +22,7 @@ const Login: React.FC = () => {
       const { token, message } = response.data.data;
       setMessage(message);
       localStorage.setItem('token', token);
-      navigate('/');
+      navigate('/home');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         setMessage(error.response.data.message);
@@ -35,7 +34,6 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <Header />
       <div className="min-h-screen bg-gradient-to-r  flex items-center justify-center">
         <div className="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md">
           <h2 className="text-3xl font-semibold text-center text-teal-700 mb-6">Sign In</h2>

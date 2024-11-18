@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom"; // Link to navigate to BlogDetail with state
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 import axiosInstance from "../axios";
 import type { Blogs } from "../types";
+
 const Blog = () => {
   const [blogs, setBlog] = useState<Blogs[]>([]);
+  const navigate = useNavigate();
   const [newBlogs, setNewBlogs] = useState({
     title: "",
     summary: "",
@@ -58,6 +61,9 @@ const Blog = () => {
       console.error("Error creating post:", error);
     }
   };
+  const handleReadMore = (blogId: string) => {
+    navigate(`/blogs/${blogId}`);
+  };
   return (
     <>
       <Header />
@@ -77,19 +83,33 @@ const Blog = () => {
               key={blog._id}
               className="bg-white shadow-lg rounded-lg overflow-hidden"
             >
-              {blog.imageUrl && (
-                <img
-                  src={blog.imageUrl}
-                  alt={blog.title}
-                  className="w-full h-48 object-cover"
-                />
-              )}
-              <div className="p-6">
-                <h2 className="text-xl font-semibold text-gray-800">
-                  {blog.title}
-                </h2>
-                <p className="text-gray-600 mt-2">{blog.summary}</p>
-              </div>
+              <Link
+                to={`/blogs/${blog._id}`}
+                state={{ blog }}
+                className="hover:text-teal-700"
+              >
+                {blog.imageUrl && (
+                  <img
+                    src={blog.imageUrl}
+                    alt={blog.title}
+                    className="w-full h-48 object-cover"
+                  />
+                )}
+                <div className="p-6">
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    {blog.title}
+                  </h2>
+                  <p className="text-gray-600 mt-2 line-clamp-1">
+                    {blog.summary}
+                  </p>
+                  <button
+                    className="mt-2 text-teal-700 underline"
+                    onClick={() => handleReadMore(blog._id)}
+                  >
+                    Read More
+                  </button>
+                </div>
+              </Link>
             </div>
           ))}
         </div>

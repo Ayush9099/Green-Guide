@@ -19,15 +19,16 @@ import AddPlant from "./Admin/AddPlant";
 import ListOfPlants from "./Admin/ListOfPlants";
 import EditPlant from "./Admin/EditPlant";
 import Blog from "./feature/Blog";
+import BlogDetail from "./feature/BlogDetails";
 
 const App = () => {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/signin" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/gardens" element={<Garden />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/plant" element={<Plant />} />
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/garden/:id" element={<GardenDetail />} />
           <Route path="/post" element={<Post />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blogs/:id" element={<BlogDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/calender" element={<Calender />} />
           <Route path="/contact" element={<ContactUs />} />
