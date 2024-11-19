@@ -248,7 +248,7 @@ export default function EditPlant() {
       });
 
       const response = await axiosInstance.put(
-        `/api/plants/${id}`,
+        `/api/plants/update/${id}`,
         formDataToSend,
         {
           headers: {
