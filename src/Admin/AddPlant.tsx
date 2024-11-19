@@ -92,6 +92,7 @@ export default function PlantManagement() {
     "Herbs",
     "Root",
   ];
+  
   const sunRequirements = [
     "Full sun",
     "Part sun to full sun",
@@ -99,6 +100,7 @@ export default function PlantManagement() {
     "Shade to part sun",
     "Shade",
   ];
+
   const growingSeasons = ["Cool", "Warm", "Perennial"];
   const frostTolerances = ["Not", "Semi", "Tolerant"];
   const timeUnits = ["days", "weeks", "months", "years"];
