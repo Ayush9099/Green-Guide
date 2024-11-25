@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../Layout/Header";
@@ -145,17 +143,25 @@ const Garden: React.FC = () => {
     navigate(`/garden/${gardenId}`);
   };
 
+  const handlePlantSelection = (plantId: string) => {
+    setNewGarden((prev) => ({
+      ...prev,
+      plants: prev.plants.includes(plantId)
+        ? prev.plants.filter((id) => id !== plantId)
+        : [...prev.plants, plantId],
+    }));
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 ">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       <Header />
       <main className="flex-grow max-w-6xl mx-auto p-6 w-full mt-5">
-
         <h1 className="text-5xl font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-500">
           My Futuristic Gardens
         </h1>
         {gardens.length === 0 ? (
           <div className="text-center bg-gray-200 p-8 rounded-xl shadow-lg">
-            <p className="text-xl text-gray-300 mb-6">
+            <p className="text-xl text-gray-600 mb-6">
               It looks like you haven't created any gardens yet. Start by adding your first one and grow something extraordinary!
             </p>
             <button
@@ -170,13 +176,12 @@ const Garden: React.FC = () => {
             {gardens.map((garden, index) => (
               <div
                 key={garden._id}
-                className="bg-gray-100 rounded-xl p-6 shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer"
+                className="bg-white rounded-xl p-6 shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer"
                 onClick={() => handleGardenClick(garden._id)}
               >
-                <h3 className="text-2xl font-semibold mb-4 text-blue-400">{garden.name}</h3>
-
+                <h3 className="text-2xl font-semibold mb-4 text-teal-600">{garden.name}</h3>
                 <div className="flex justify-between items-center mb-6">
-                  <span className="text-black">Plants:</span>
+                  <span className="text-gray-600">Plants:</span>
                   <span className="text-lg font-medium">{garden.plants.length}</span>
                 </div>
                 <div className="flex justify-between">
@@ -189,9 +194,7 @@ const Garden: React.FC = () => {
                   >
                     Delete
                   </button>
-                  <button
-                    className="bg-teal-600 text-white px-4 py-2 rounded-lg shadow hover:bg-teal-700 transition duration-200"
-                  >
+                  <button className="bg-teal-600 text-white px-4 py-2 rounded-lg shadow hover:bg-teal-700 transition duration-200">
                     View Details
                   </button>
                 </div>
@@ -221,26 +224,25 @@ const Garden: React.FC = () => {
               placeholder="Enter garden name"
               className="border border-gray-300 p-3 rounded w-full mb-4 focus:outline-none focus:ring focus:ring-green-300 transition duration-200"
             />
-            <select
-              multiple
-              value={newGarden.plants}
-              onChange={(e) =>
-                setNewGarden({
-                  ...newGarden,
-                  plants: Array.from(
-                    e.target.selectedOptions,
-                    (option) => option.value
-                  ),
-                })
-              }
-              className="border border-gray-300 p-3 rounded w-full mb-4"
-            >
-              {plantOptions.map((plant) => (
-                <option key={plant._id} value={plant._id}>
-                  {plant.generalInfo.plantName}
-                </option>
-              ))}
-            </select>
+            <div className="mb-4">
+              <h4 className="mb-2 font-medium text-gray-700">Select Plants:</h4>
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {plantOptions.map((plant) => (
+                  <div key={plant._id} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={plant._id}
+                      checked={newGarden.plants.includes(plant._id)}
+                      onChange={() => handlePlantSelection(plant._id)}
+                      className="mr-2"
+                    />
+                    <label htmlFor={plant._id} className="text-sm font-medium text-gray-700">
+                      {plant.generalInfo.plantName}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
             <input
               type="date"
               value={newGarden.last_watered}
@@ -307,3 +309,4 @@ const Garden: React.FC = () => {
 };
 
 export default Garden;
+
