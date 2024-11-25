@@ -20,6 +20,7 @@ import ListOfPlants from "./Admin/ListOfPlants";
 import EditPlant from "./Admin/EditPlant";
 import Blog from "./feature/Blog";
 import BlogDetail from "./feature/BlogDetails";
+import EditBlog from "./feature/editBlog";
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
           <Route path="/post" element={<Post />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blogs/:id" element={<BlogDetail />} />
+          <Route path="/blogs/edit/:id" element={<EditBlog />} />
           <Route path="/about" element={<About />} />
           <Route path="/calender" element={<Calender />} />
           <Route path="/contact" element={<ContactUs />} />

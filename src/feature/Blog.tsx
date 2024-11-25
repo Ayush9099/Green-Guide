@@ -102,12 +102,20 @@ const Blog = () => {
                   <p className="text-gray-600 mt-2 line-clamp-1">
                     {blog.summary}
                   </p>
-                  <button
-                    className="mt-2 text-teal-700 underline"
-                    onClick={() => handleReadMore(blog._id)}
-                  >
-                    Read More
-                  </button>
+                  <div className="flex justify-between mt-4">
+                    <button
+                      className="text-teal-700 underline"
+                      onClick={() => handleReadMore(blog._id)}
+                    >
+                      Read More
+                    </button>
+                    <button
+                      className="text-teal-700 underline"
+                      onClick={() => navigate(`/blogs/edit/${blog._id}`)}
+                    >
+                      Edit Blog
+                    </button>
+                  </div>
                 </div>
               </Link>
             </div>
