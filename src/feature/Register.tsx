@@ -21,7 +21,7 @@ const Register: React.FC = () => {
             });
 
             setMessage(response.data.message);
-            navigate("/signin");
+            navigate("/");
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 setMessage(error.response.data.message);
