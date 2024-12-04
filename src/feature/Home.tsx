@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "../Layout/Header";
 import Footer from "../Layout/Footer";
 import axiosInstance from "../axios";
-import type { Plant , Review} from "../types";
+import type { Plant, Review } from "../types";
 
 const Home: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -59,6 +59,24 @@ const Home: React.FC = () => {
     }
   };
 
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === "ArrowDown") {
+      setSelectedIndex((prevIndex) =>
+        prevIndex < searchResults.length - 1 ? prevIndex + 1 : prevIndex
+      );
+    } else if (e.key === "ArrowUp") {
+      setSelectedIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : prevIndex
+      );
+    } else if (e.key === "Enter") {
+      if (selectedIndex >= 0) {
+        handlePlantClick(searchResults[selectedIndex]._id);
+      }
+    }
+  };
+
   const handleCategorySearch = async (searchTerm: string) => {
     if (searchTerm) {
       try {
@@ -85,6 +103,7 @@ const Home: React.FC = () => {
   };
 
   const displayedReviews = reviews.slice(0, 10);
+  const isLoggedIn = Boolean(localStorage.getItem("token")); 
 
   return (
     <>
@@ -123,39 +142,64 @@ const Home: React.FC = () => {
               Looking for a specific plant? Use the search bar to explore plants
               by family or category.
             </p>
-            <input
-              type="text"
-              value={category}
-              onChange={handleInputChange}
-              placeholder="Enter plant family or category"
-              className="block mx-auto w-full md:w-1/2 rounded-md border border-gray-300 px-5 py-3 text-gray-800 shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
-            />
+            <div className="relative w-full md:w-1/2 mx-auto">
+              <input
+                type="text"
+                value={category}
+                onChange={handleInputChange}
+                placeholder="Enter plant family or category"
+                className="w-full rounded-md border border-gray-300 px-5 py-3 text-gray-800 shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                onKeyDown={handleKeyDown}
+              />
+              {searchResults.length > 0 && (
+                <ul className="absolute w-full bg-white border border-gray-300 rounded-md shadow-md mt-2 max-h-60 overflow-y-auto z-10">
+                  {searchResults.map((plant, index) => (
+                    <li
+                      key={plant._id}
+                      className={`p-3 cursor-pointer transition duration-200 ${
+                        selectedIndex === index
+                          ? "bg-teal-500 text-white"
+                          : "hover:bg-teal-500 hover:text-white"
+                      }`}
+                      onClick={() => handlePlantClick(plant._id)}
+                    >
+                      {plant.generalInfo.plantName}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </section>
 
-        {/* Search Results */}
-        {searchResults.length > 0 && (
-          <section className="py-16 bg-gray-100">
-            <div className="container mx-auto">
-              <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">
-                Search Results
-              </h2>
-              <ul className="space-y-4">
-                {searchResults.map((plant) => (
-                  <li
-                    key={plant._id}
-                    className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 cursor-pointer"
-                    onClick={() => handlePlantClick(plant._id)}
-                  >
-                    <h3 className="text-xl font-semibold text-gray-800">
-                      {plant.generalInfo.plantName}
-                    </h3>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        )}
+        {/* Donate Section */}
+        <section className="py-16 bg-green-100">
+          <div className="container mx-auto text-center">
+            <h2 className="text-3xl font-semibold text-gray-800 mb-6">
+              Support Our Green Mission
+            </h2>
+            <p className="text-lg text-gray-600 mb-6">
+              Your support helps us expand collections, improve your experience,
+              promote sustainability, and deliver plants nationwide! 🌱
+            </p>
+
+            {isLoggedIn ? (
+              <button
+                onClick={() =>
+                  (window.location.href =
+                    "https://donate.stripe.com/test_fZeeXTanAfxh0UMdQQ")
+                }
+                className="bg-green-600 text-white py-3 px-8 rounded-lg text-lg font-semibold shadow-lg hover:bg-green-500 transition duration-300"
+              >
+                Donate Now
+              </button>
+            ) : (
+              <p className="text-lg text-red-500 mt-4">
+                Please log in to make a donation.
+              </p>
+            )}
+          </div>
+        </section>
 
         {/* Popular Plants Section */}
         <section className="py-16 bg-white">
