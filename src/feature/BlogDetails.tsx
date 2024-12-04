@@ -46,7 +46,7 @@ const BlogDetail = () => {
   return (
     <>
       <Header />
-      <div className="max-w-6xl mx-auto p-6 bg-gray-50">
+      <div className="max-w-6xl mx-auto p-6 bg-gray-50 mt-2">
         <h1 className="text-4xl font-bold text-center mb-8 text-teal-700">
           {blog.title}
         </h1>
@@ -55,7 +55,7 @@ const BlogDetail = () => {
             <img
               src={blog.imageUrl}
               alt={blog.title}
-              className="max-w-full h-auto object-contain rounded-lg shadow-md"
+              className="w-[40%] h-auto rounded-lg transition-transform duration-300 transform hover:scale-110"
             />
           </div>
         )}
