@@ -12,7 +12,7 @@ import Calender from "./feature/Calender";
 import PlantDetailed from "./feature/plantDetail";
 import GardenDetail from "./feature/garden-detail"
 import Home from "./feature/Home";
-import ContactUs from "./feature/contactUs";
+import Contact from "./feature/contactUs";
 import AdminLogin from "./feature/AdminLogin";
 import Dashboard from "./Admin/Dashboard";
 import AddPlant from "./Admin/AddPlant";
@@ -41,7 +41,7 @@ const App = () => {
           <Route path="/blogs/edit/:id" element={<EditBlog />} />
           <Route path="/about" element={<About />} />
           <Route path="/calender" element={<Calender />} />
-          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/adminlogin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/admin/listofplants" element={<ListOfPlants />} />

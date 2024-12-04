@@ -6,7 +6,7 @@ import Header from "../Layout/Header";
 import { FaPhoneAlt, FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
 import axiosInstance from "../axios";
 
-const ContactUs: React.FC = () => {
+const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -174,4 +174,4 @@ const ContactUs: React.FC = () => {
     </>
   );
 };
-export default ContactUs;
+export default Contact;
